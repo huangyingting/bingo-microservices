@@ -1,0 +1,87 @@
+syntax = "proto3";
+
+option go_package = "bi/internal/conf;conf";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/duration.proto";
+import "rabbitmq.proto";
+
+message Bootstrap {
+  Server server = 1;
+  Store store = 2;
+  Alias alias = 3;
+  Search search = 4;
+  Cache cache = 5;
+  Recaptcha recaptcha = 6;
+  JWT jwt = 7;
+  bingo.pkg.rabbitmq.PublisherConfig publisher = 8;
+  BI bi = 9;
+}
+
+message Server {
+  message HTTP {
+    string network = 1;
+    string addr = 2;
+    google.protobuf.Duration timeout = 3;
+  }
+  message GRPC {
+    string network = 1;
+    string addr = 2;
+    google.protobuf.Duration timeout = 3;
+  }
+  HTTP http = 1;
+  GRPC grpc = 2;
+  bool debug = 3;
+}
+
+message Store {
+  string driver = 1;
+  string host = 2;
+  uint32 port = 3;
+  string database = 4;
+  string username = 5;
+  string password = 6;
+}
+
+message Alias {
+  google.protobuf.Timestamp start_time = 1;
+  uint32 bit_len_time = 2;
+  uint32 bit_len_sequence = 3;
+  uint32 bit_len_machine_id = 4;
+  repeated string etcd_addr = 5;
+}
+
+message Search {
+  repeated string addr = 1;
+  string index_name = 2;
+  bool sniff = 3;
+  uint32 number_of_shards = 4;
+  uint32 number_of_replicas = 5;
+}
+
+message Cache {
+  string addr = 1;
+  uint32 cache_ttl = 2;
+}
+
+message Recaptcha {
+  string site_key = 1;
+  string secret_key = 2;
+}
+
+message JWT {
+  string issuer = 1;
+  string audience = 2;
+  string fallback_signature_algorithm = 3;
+  map<string, string> required_claims = 4;
+}
+
+message BI {  
+  string grpc_addr = 1;
+  string http_addr = 2;
+  enum Protocol {
+    GRPC = 0;
+    HTTP = 1;
+  }
+  Protocol protocol = 3;
+}

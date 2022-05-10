@@ -1,0 +1,187 @@
+syntax = "proto3";
+
+package api.shorturl.v1;
+
+import "google/protobuf/timestamp.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+
+option go_package = "api/shorturl/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.shorturl.v1";
+option java_outer_classname = "ApiShortUrlV1";
+
+service ShortUrl {
+  rpc CreateShortUrl (CreateShortUrlRequest) returns (ShortUrlResponse) {
+    option (google.api.http) = {
+      post: "/v1/shorturl"
+      body: "*"
+    };
+  }
+  rpc UpdateShortUrl (UpdateShortUrlRequest) returns (ShortUrlResponse) {
+    option (google.api.http) = {
+      put: "/v1/shorturl"
+      body: "*"
+    };
+  }
+  rpc ListShortUrl(google.protobuf.Empty) returns (ListShortUrlResponse) {
+    option (google.api.http) = {
+      get: "/v1/shorturl"
+    };
+  }
+  rpc GetShortUrl(GetShortUrlRequest) returns (ShortUrlResponse) {
+    option (google.api.http) = {
+      get: "/v1/shorturl/{alias}"
+    };
+  }
+  rpc DeleteShortUrl(DeleteShortUrlRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/v1/shorturl/{alias}"
+    };
+  }
+}
+
+service Captcha {
+  rpc Verify (VerifyRequest) returns (VerifyResponse) {
+    option (google.api.http) = {
+      post: "/v1/captcha/verify"
+      body: "*"
+    };
+  }  
+}
+
+service TagSuggest {
+  rpc Verify (SuggestRequest) returns (SuggestResponse) {
+    option (google.api.http) = {
+      get: "/v1/tag-suggest/{query}"
+    };
+  }  
+}
+
+service System {
+  rpc UpdateMemLoad (MemLoadRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v1/system/mem"
+      body: "*"
+    };
+  }
+  rpc UpdateCpuLoad (CpuLoadRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/v1/system/cpu"
+      body: "*"
+    };
+  }
+  rpc Stats(google.protobuf.Empty) returns (StatsResponse) {
+    option (google.api.http) = {
+      get: "/v1/system/stats"
+    };
+  }
+}
+
+service ShortUrlBI {
+  rpc Clicks (ClicksRequest) returns (ClicksReply) {
+    option (google.api.http) = {
+      get: "/v1/shorturl-bi/clicks/{alias}"
+    };
+  }
+}
+
+message CreateShortUrlRequest {
+  string alias = 1;
+  string url = 2;
+}
+
+message ShortUrlResponse {
+  string alias = 1;
+  string url = 2;
+  string title = 3;
+  repeated string tags = 4;
+  bool fraud_detection = 5;
+  bool disabled = 6;
+  bool no_referrer = 7;
+  string utm_source = 8;
+  string utm_medium = 9;
+  string utm_campaign = 10;
+  string utm_term = 11;
+  string utm_content = 12;
+  google.protobuf.Timestamp created_at = 13;
+}
+
+message UpdateShortUrlRequest {
+  string alias = 1;
+  string url = 2;
+  string title = 3;
+  repeated string tags = 4;
+  bool fraud_detection = 5;
+  bool disabled = 6;
+  bool no_referrer = 7;
+  string utm_source = 8;
+  string utm_medium = 9;
+  string utm_campaign = 10;
+  string utm_term = 11;
+  string utm_content = 12;
+}
+
+message ListShortUrlResponse {
+  repeated ShortUrlResponse value = 1;
+}
+
+message GetShortUrlRequest {
+  string alias = 1;
+}
+
+message DeleteShortUrlRequest {
+  string alias = 1;
+}
+
+message VerifyRequest {
+  string token = 1;
+  string alias = 2;
+}
+
+message VerifyResponse {
+  double score = 1;
+  string url = 2;
+}
+
+message SuggestRequest {
+  string query = 1;
+}
+
+message SuggestResponse {
+  repeated string value = 1;
+}
+
+message StatsResponse {
+  string hostname = 1;
+  string os = 2;
+  string platform = 3;
+  string platform_version = 4;
+  string cpu_model_name = 5;
+  int32 cpu_cores = 6;
+  int32 cpu_cache_size = 7;
+  double cpu_mhz = 8;
+  string go_arch = 9;
+  string go_version = 10;
+  uint64 mem_total = 11;
+  string local_ip = 12;
+  string external_ip = 13;
+  bool is_container = 14;
+  bool is_kubernetes = 15;
+}
+
+message MemLoadRequest {
+  int64 size = 1;
+}
+
+message CpuLoadRequest {
+  int64 percent = 1;
+}
+
+message ClicksRequest {
+  string alias = 1;
+}
+
+message ClicksReply {
+  uint64 clicks = 1;
+}

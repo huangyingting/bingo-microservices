@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package bingo.pkg.rabbitmq;
+
+option go_package = "bingo/pkg/rabbitmq;rabbitmq";
+
+import "google/protobuf/duration.proto";
+
+message SubscriberConfig {
+  string amqp_uri = 1;
+  string name = 2;
+  string ca_cert = 3;
+  string client_cert = 4;
+  string client_key = 5;
+  string exchange_name = 6;
+  string exchange_type = 7;
+  string queue_name = 8;
+  string queue_mode = 9;
+  string routing_key = 10;
+  string dl_exchange_name = 11;
+  uint32 worker_count = 12;
+  uint32 prefetch_count = 13;
+  google.protobuf.Duration connect_timeout = 14;
+  uint32 connect_attempt = 15;
+  google.protobuf.Duration retry_interval = 16;
+  uint32 reconnect_attempt = 17;
+}
+
+message PublisherConfig {
+  string amqp_uri = 1;
+  string name = 2;
+  string ca_cert = 3;
+  string client_cert = 4;
+  string client_key = 5;
+  string exchange_name = 6;
+  string exchange_type = 7;
+  string queue_mode = 8;
+  string routing_key = 9;
+  uint32 retry_attempt = 10;
+  google.protobuf.Duration retry_interval = 11;
+  google.protobuf.Duration connect_timeout = 12;
+}

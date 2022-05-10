@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package api.bi.v1;
+
+import "google/protobuf/timestamp.proto";
+import "google/api/annotations.proto";
+
+option go_package = "api/bi/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.bi.v1";
+option java_outer_classname = "ApiBIV1";
+
+// The bingo reporting definition.
+service BI {
+  // Sends a greeting
+  rpc Clicks (ClicksRequest) returns (ClicksReply) {
+    option (google.api.http) = {
+      get: "/v1/clicks/{alias}"
+    };
+  }
+}
+
+message ClicksRequest {
+  string alias = 1;
+}
+
+message ClicksReply {
+  uint64 clicks = 1;
+}
+
+message ClickEvent {
+  string alias = 1;
+  string ip = 2;
+  string ua = 3;
+  string referer = 4;
+  google.protobuf.Timestamp created_at = 5;
+}

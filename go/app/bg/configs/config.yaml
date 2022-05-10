@@ -1,0 +1,9 @@
+server:
+  http:
+    addr: "${HTTP_ADDR:0.0.0.0:8000}"
+    timeout: "${HTTP_TIMEOUT:1s}"
+  grpc:
+    addr: "${GRPC_ADDR:0.0.0.0:9000}"
+    timeout: "${GRPC_TIMEOUT:1s}"
+redis:
+  addr: "${REDIS_ADDR:localhost:6379}"

@@ -1,0 +1,32 @@
+server:
+  http:
+    addr: "${HTTP_ADDR:0.0.0.0:8001}"
+    timeout: "${HTTP_TIMEOUT:1s}"
+  grpc:
+    addr: "${GRPC_ADDR:0.0.0.0:9001}"
+    timeout: "${GRPC_TIMEOUT:1s}"
+store:
+  driver: "${DB_DRIVER:mysql}"
+  host: "${DB_HOST:localhost}"
+  port: "${DB_PORT:3306}"
+  database: "${DB_DATABASE:bingo}"
+  username: "${DB_USERNAME:bingo}"
+  password: "${DB_PASSWORD:P@ssw0rd}"
+geo:
+  grpc_addr: "${REMOTE_BG_GRPC_ADDR:localhost:9000}"
+  http_addr: "${REMOTE_BG_HTTP_ADDR:localhost:8000}"
+  protocol: HTTP
+subscriber:
+  amqp_uri: "${AMQP_URI:amqp://localhost:5672/}"
+  name: clicks
+  exchange_name: bingo
+  exchange_type: direct
+  queue_name: clicks
+  routing_key: clicks
+  queue_mode: default
+  worker_count: "${WORKER_COUNT:2}"
+  prefetch_count: "${PREFETCH_COUNT:2}"
+  connect_timeout: 5s
+  connect_attempt: 3
+  retry_interval: 5s
+  reconnect_attempt: 0
