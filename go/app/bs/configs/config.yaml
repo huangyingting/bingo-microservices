@@ -57,3 +57,7 @@ bi:
   grpc_addr: "${REMOTE_BI_GRPC_ADDR:localhost:9001}"
   http_addr: "${REMOTE_BI_HTTP_ADDR:localhost:8001}"
   protocol: HTTP
+be:
+  http_addr: "${REMOTE_BE_HTTP_ADDR:localhost:8002}"
+go_witness:
+  addr: "${REMOTE_GO_WITNESS_ADDR:http://localhost:7171}"  

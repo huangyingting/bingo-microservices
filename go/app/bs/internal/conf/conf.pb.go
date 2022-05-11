@@ -83,6 +83,8 @@ type Bootstrap struct {
 	Jwt       *JWT                      `protobuf:"bytes,7,opt,name=jwt,proto3" json:"jwt,omitempty"`
 	Publisher *rabbitmq.PublisherConfig `protobuf:"bytes,8,opt,name=publisher,proto3" json:"publisher,omitempty"`
 	Bi        *BI                       `protobuf:"bytes,9,opt,name=bi,proto3" json:"bi,omitempty"`
+	Be        *BE                       `protobuf:"bytes,10,opt,name=be,proto3" json:"be,omitempty"`
+	GoWitness *GoWitness                `protobuf:"bytes,11,opt,name=go_witness,json=goWitness,proto3" json:"go_witness,omitempty"`
 }
 
 func (x *Bootstrap) Reset() {
@@ -176,6 +178,20 @@ func (x *Bootstrap) GetPublisher() *rabbitmq.PublisherConfig {
 func (x *Bootstrap) GetBi() *BI {
 	if x != nil {
 		return x.Bi
+	}
+	return nil
+}
+
+func (x *Bootstrap) GetBe() *BE {
+	if x != nil {
+		return x.Be
+	}
+	return nil
+}
+
+func (x *Bootstrap) GetGoWitness() *GoWitness {
+	if x != nil {
+		return x.GoWitness
 	}
 	return nil
 }
@@ -732,6 +748,100 @@ func (x *BI) GetProtocol() BI_Protocol {
 	return BI_GRPC
 }
 
+type BE struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	HttpAddr string `protobuf:"bytes,1,opt,name=http_addr,json=httpAddr,proto3" json:"http_addr,omitempty"`
+}
+
+func (x *BE) Reset() {
+	*x = BE{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_internal_conf_conf_proto_msgTypes[9]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *BE) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BE) ProtoMessage() {}
+
+func (x *BE) ProtoReflect() protoreflect.Message {
+	mi := &file_internal_conf_conf_proto_msgTypes[9]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BE.ProtoReflect.Descriptor instead.
+func (*BE) Descriptor() ([]byte, []int) {
+	return file_internal_conf_conf_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *BE) GetHttpAddr() string {
+	if x != nil {
+		return x.HttpAddr
+	}
+	return ""
+}
+
+type GoWitness struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Addr string `protobuf:"bytes,1,opt,name=addr,proto3" json:"addr,omitempty"`
+}
+
+func (x *GoWitness) Reset() {
+	*x = GoWitness{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_internal_conf_conf_proto_msgTypes[10]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GoWitness) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GoWitness) ProtoMessage() {}
+
+func (x *GoWitness) ProtoReflect() protoreflect.Message {
+	mi := &file_internal_conf_conf_proto_msgTypes[10]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GoWitness.ProtoReflect.Descriptor instead.
+func (*GoWitness) Descriptor() ([]byte, []int) {
+	return file_internal_conf_conf_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *GoWitness) GetAddr() string {
+	if x != nil {
+		return x.Addr
+	}
+	return ""
+}
+
 type Server_HTTP struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -745,7 +855,7 @@ type Server_HTTP struct {
 func (x *Server_HTTP) Reset() {
 	*x = Server_HTTP{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_conf_conf_proto_msgTypes[9]
+		mi := &file_internal_conf_conf_proto_msgTypes[11]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -758,7 +868,7 @@ func (x *Server_HTTP) String() string {
 func (*Server_HTTP) ProtoMessage() {}
 
 func (x *Server_HTTP) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_conf_conf_proto_msgTypes[9]
+	mi := &file_internal_conf_conf_proto_msgTypes[11]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -808,7 +918,7 @@ type Server_GRPC struct {
 func (x *Server_GRPC) Reset() {
 	*x = Server_GRPC{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_conf_conf_proto_msgTypes[10]
+		mi := &file_internal_conf_conf_proto_msgTypes[12]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -821,7 +931,7 @@ func (x *Server_GRPC) String() string {
 func (*Server_GRPC) ProtoMessage() {}
 
 func (x *Server_GRPC) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_conf_conf_proto_msgTypes[10]
+	mi := &file_internal_conf_conf_proto_msgTypes[12]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -867,7 +977,7 @@ var file_internal_conf_conf_proto_rawDesc = []byte{
 	0x73, 0x74, 0x61, 0x6d, 0x70, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x1a, 0x1e, 0x67, 0x6f, 0x6f,
 	0x67, 0x6c, 0x65, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2f, 0x64, 0x75, 0x72,
 	0x61, 0x74, 0x69, 0x6f, 0x6e, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x1a, 0x0e, 0x72, 0x61, 0x62,
-	0x62, 0x69, 0x74, 0x6d, 0x71, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0xc1, 0x02, 0x0a, 0x09,
+	0x62, 0x69, 0x74, 0x6d, 0x71, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0x81, 0x03, 0x0a, 0x09,
 	0x42, 0x6f, 0x6f, 0x74, 0x73, 0x74, 0x72, 0x61, 0x70, 0x12, 0x1f, 0x0a, 0x06, 0x73, 0x65, 0x72,
 	0x76, 0x65, 0x72, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x07, 0x2e, 0x53, 0x65, 0x72, 0x76,
 	0x65, 0x72, 0x52, 0x06, 0x73, 0x65, 0x72, 0x76, 0x65, 0x72, 0x12, 0x1c, 0x0a, 0x05, 0x73, 0x74,
@@ -887,7 +997,11 @@ var file_internal_conf_conf_proto_rawDesc = []byte{
 	0x67, 0x6f, 0x2e, 0x70, 0x6b, 0x67, 0x2e, 0x72, 0x61, 0x62, 0x62, 0x69, 0x74, 0x6d, 0x71, 0x2e,
 	0x50, 0x75, 0x62, 0x6c, 0x69, 0x73, 0x68, 0x65, 0x72, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x52,
 	0x09, 0x70, 0x75, 0x62, 0x6c, 0x69, 0x73, 0x68, 0x65, 0x72, 0x12, 0x13, 0x0a, 0x02, 0x62, 0x69,
-	0x18, 0x09, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x03, 0x2e, 0x42, 0x49, 0x52, 0x02, 0x62, 0x69, 0x22,
+	0x18, 0x09, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x03, 0x2e, 0x42, 0x49, 0x52, 0x02, 0x62, 0x69, 0x12,
+	0x13, 0x0a, 0x02, 0x62, 0x65, 0x18, 0x0a, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x03, 0x2e, 0x42, 0x45,
+	0x52, 0x02, 0x62, 0x65, 0x12, 0x29, 0x0a, 0x0a, 0x67, 0x6f, 0x5f, 0x77, 0x69, 0x74, 0x6e, 0x65,
+	0x73, 0x73, 0x18, 0x0b, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x0a, 0x2e, 0x47, 0x6f, 0x57, 0x69, 0x74,
+	0x6e, 0x65, 0x73, 0x73, 0x52, 0x09, 0x67, 0x6f, 0x57, 0x69, 0x74, 0x6e, 0x65, 0x73, 0x73, 0x22,
 	0xb8, 0x02, 0x0a, 0x06, 0x53, 0x65, 0x72, 0x76, 0x65, 0x72, 0x12, 0x20, 0x0a, 0x04, 0x68, 0x74,
 	0x74, 0x70, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x0c, 0x2e, 0x53, 0x65, 0x72, 0x76, 0x65,
 	0x72, 0x2e, 0x48, 0x54, 0x54, 0x50, 0x52, 0x04, 0x68, 0x74, 0x74, 0x70, 0x12, 0x20, 0x0a, 0x04,
@@ -974,9 +1088,14 @@ var file_internal_conf_conf_proto_rawDesc = []byte{
 	0x6c, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x0c, 0x2e, 0x42, 0x49, 0x2e, 0x50, 0x72, 0x6f,
 	0x74, 0x6f, 0x63, 0x6f, 0x6c, 0x52, 0x08, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x63, 0x6f, 0x6c, 0x22,
 	0x1e, 0x0a, 0x08, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x63, 0x6f, 0x6c, 0x12, 0x08, 0x0a, 0x04, 0x47,
-	0x52, 0x50, 0x43, 0x10, 0x00, 0x12, 0x08, 0x0a, 0x04, 0x48, 0x54, 0x54, 0x50, 0x10, 0x01, 0x42,
-	0x17, 0x5a, 0x15, 0x62, 0x69, 0x2f, 0x69, 0x6e, 0x74, 0x65, 0x72, 0x6e, 0x61, 0x6c, 0x2f, 0x63,
-	0x6f, 0x6e, 0x66, 0x3b, 0x63, 0x6f, 0x6e, 0x66, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x52, 0x50, 0x43, 0x10, 0x00, 0x12, 0x08, 0x0a, 0x04, 0x48, 0x54, 0x54, 0x50, 0x10, 0x01, 0x22,
+	0x21, 0x0a, 0x02, 0x42, 0x45, 0x12, 0x1b, 0x0a, 0x09, 0x68, 0x74, 0x74, 0x70, 0x5f, 0x61, 0x64,
+	0x64, 0x72, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x68, 0x74, 0x74, 0x70, 0x41, 0x64,
+	0x64, 0x72, 0x22, 0x1f, 0x0a, 0x09, 0x47, 0x6f, 0x57, 0x69, 0x74, 0x6e, 0x65, 0x73, 0x73, 0x12,
+	0x12, 0x0a, 0x04, 0x61, 0x64, 0x64, 0x72, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x61,
+	0x64, 0x64, 0x72, 0x42, 0x17, 0x5a, 0x15, 0x62, 0x69, 0x2f, 0x69, 0x6e, 0x74, 0x65, 0x72, 0x6e,
+	0x61, 0x6c, 0x2f, 0x63, 0x6f, 0x6e, 0x66, 0x3b, 0x63, 0x6f, 0x6e, 0x66, 0x62, 0x06, 0x70, 0x72,
+	0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -992,7 +1111,7 @@ func file_internal_conf_conf_proto_rawDescGZIP() []byte {
 }
 
 var file_internal_conf_conf_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_internal_conf_conf_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
+var file_internal_conf_conf_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
 var file_internal_conf_conf_proto_goTypes = []interface{}{
 	(BI_Protocol)(0),                 // 0: BI.Protocol
 	(*Bootstrap)(nil),                // 1: Bootstrap
@@ -1004,12 +1123,14 @@ var file_internal_conf_conf_proto_goTypes = []interface{}{
 	(*Recaptcha)(nil),                // 7: Recaptcha
 	(*JWT)(nil),                      // 8: JWT
 	(*BI)(nil),                       // 9: BI
-	(*Server_HTTP)(nil),              // 10: Server.HTTP
-	(*Server_GRPC)(nil),              // 11: Server.GRPC
-	nil,                              // 12: JWT.RequiredClaimsEntry
-	(*rabbitmq.PublisherConfig)(nil), // 13: bingo.pkg.rabbitmq.PublisherConfig
-	(*timestamppb.Timestamp)(nil),    // 14: google.protobuf.Timestamp
-	(*durationpb.Duration)(nil),      // 15: google.protobuf.Duration
+	(*BE)(nil),                       // 10: BE
+	(*GoWitness)(nil),                // 11: GoWitness
+	(*Server_HTTP)(nil),              // 12: Server.HTTP
+	(*Server_GRPC)(nil),              // 13: Server.GRPC
+	nil,                              // 14: JWT.RequiredClaimsEntry
+	(*rabbitmq.PublisherConfig)(nil), // 15: bingo.pkg.rabbitmq.PublisherConfig
+	(*timestamppb.Timestamp)(nil),    // 16: google.protobuf.Timestamp
+	(*durationpb.Duration)(nil),      // 17: google.protobuf.Duration
 }
 var file_internal_conf_conf_proto_depIdxs = []int32{
 	2,  // 0: Bootstrap.server:type_name -> Server
@@ -1019,20 +1140,22 @@ var file_internal_conf_conf_proto_depIdxs = []int32{
 	6,  // 4: Bootstrap.cache:type_name -> Cache
 	7,  // 5: Bootstrap.recaptcha:type_name -> Recaptcha
 	8,  // 6: Bootstrap.jwt:type_name -> JWT
-	13, // 7: Bootstrap.publisher:type_name -> bingo.pkg.rabbitmq.PublisherConfig
+	15, // 7: Bootstrap.publisher:type_name -> bingo.pkg.rabbitmq.PublisherConfig
 	9,  // 8: Bootstrap.bi:type_name -> BI
-	10, // 9: Server.http:type_name -> Server.HTTP
-	11, // 10: Server.grpc:type_name -> Server.GRPC
-	14, // 11: Alias.start_time:type_name -> google.protobuf.Timestamp
-	12, // 12: JWT.required_claims:type_name -> JWT.RequiredClaimsEntry
-	0,  // 13: BI.protocol:type_name -> BI.Protocol
-	15, // 14: Server.HTTP.timeout:type_name -> google.protobuf.Duration
-	15, // 15: Server.GRPC.timeout:type_name -> google.protobuf.Duration
-	16, // [16:16] is the sub-list for method output_type
-	16, // [16:16] is the sub-list for method input_type
-	16, // [16:16] is the sub-list for extension type_name
-	16, // [16:16] is the sub-list for extension extendee
-	0,  // [0:16] is the sub-list for field type_name
+	10, // 9: Bootstrap.be:type_name -> BE
+	11, // 10: Bootstrap.go_witness:type_name -> GoWitness
+	12, // 11: Server.http:type_name -> Server.HTTP
+	13, // 12: Server.grpc:type_name -> Server.GRPC
+	16, // 13: Alias.start_time:type_name -> google.protobuf.Timestamp
+	14, // 14: JWT.required_claims:type_name -> JWT.RequiredClaimsEntry
+	0,  // 15: BI.protocol:type_name -> BI.Protocol
+	17, // 16: Server.HTTP.timeout:type_name -> google.protobuf.Duration
+	17, // 17: Server.GRPC.timeout:type_name -> google.protobuf.Duration
+	18, // [18:18] is the sub-list for method output_type
+	18, // [18:18] is the sub-list for method input_type
+	18, // [18:18] is the sub-list for extension type_name
+	18, // [18:18] is the sub-list for extension extendee
+	0,  // [0:18] is the sub-list for field type_name
 }
 
 func init() { file_internal_conf_conf_proto_init() }
@@ -1150,7 +1273,7 @@ func file_internal_conf_conf_proto_init() {
 			}
 		}
 		file_internal_conf_conf_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Server_HTTP); i {
+			switch v := v.(*BE); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1162,6 +1285,30 @@ func file_internal_conf_conf_proto_init() {
 			}
 		}
 		file_internal_conf_conf_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GoWitness); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_internal_conf_conf_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Server_HTTP); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_internal_conf_conf_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Server_GRPC); i {
 			case 0:
 				return &v.state
@@ -1180,7 +1327,7 @@ func file_internal_conf_conf_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_internal_conf_conf_proto_rawDesc,
 			NumEnums:      1,
-			NumMessages:   12,
+			NumMessages:   14,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

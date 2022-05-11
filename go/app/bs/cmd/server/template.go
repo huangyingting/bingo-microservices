@@ -133,3 +133,102 @@ var CAPTCHA_TEMPLATE = template.Must(template.New("Captcha").Parse(`
 
 </html>
 `))
+
+var EXPAND_TEMPLATE = template.Must(template.New("Expand").Parse(`
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Expanded URL Information</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap');
+    h1, h2, h3, h4, p, body, a {
+      font-family: 'Poppins', sans-serif;
+    }
+    body {
+      padding: 0px 12px;
+      background: #a18cd1;
+      background: #a18cd1;
+      color: #fff;
+      background: -webkit-linear-gradient(to right, rgba(161, 140, 209, 0.5), rgba(251, 194, 235, 0.5));
+      background: linear-gradient(to right, rgba(161, 140, 209, 0.5), rgba(251, 194, 235, 0.5));
+    }
+    .w-25 {
+      width: 25%;
+      height: auto;
+      overflow-wrap: break-word;
+    }
+    .w-75 {
+      width: 75%;
+      height: auto;
+      overflow-wrap: break-word;
+    }
+    .flex {
+      display: flex;
+      flex-direction: row;
+    }
+    .left {
+      float: left;
+      width: 50%;
+    }
+    .right {
+      float: right;
+      width: 50%;
+    }
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+    .group:after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+    @media screen and (max-width: 768px) {
+      .left,
+      .right {
+        float: none;
+        width: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Expand Short URL</h1>
+  <h2>Allows you to retrieve the original URL from a shortened link before clicking on it and visiting the destination.
+    We provide furthermore information about unshortened URL such as title, description, keywords and summary of the
+    page.</h2>
+  <div class="group">
+    <div class="left">
+      <h2>Information</h2>
+      <div class="flex">
+        <h3 class="w-25">Short URL Alias:</h3>
+        <p class="w-75">{{.Alias}}</p>
+      </div>
+      <div class="flex">
+        <h3 class="w-25">Original URL:</h3>
+        <p class="w-75">{{.Url}}</p>
+      </div>
+      <div class="flex">
+        <h3 class="w-25">Title:</h3>
+        <p class="w-75">{{.Title}}</p>
+      </div>
+      <div class="flex">
+        <h3 class="w-25">Keywords:</h3>
+        <p class="w-75">{{.Keywords}}</p>
+      </div>
+      <div class="flex">
+        <h3 class="w-25">Summary:</h3>
+        <p class="w-75">{{.Summary}}</p>
+      </div>
+    </div>
+    <div class="right">
+      <h2>URL Snapshot</h2>
+      <img
+        src="{{.Snapshot}}" loading="lazy" alt="snapshot"/>
+    </div>
+  </div>
+</body>
+</html>
+`))

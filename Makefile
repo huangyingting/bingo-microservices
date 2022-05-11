@@ -44,6 +44,11 @@ go-build: go-pkg go-api go-internal
 go-docker: go-pkg go-api go-internal
 	find go/app -mindepth 1 -maxdepth 1 -type d -print | xargs -L 1 bash -c 'cd "$$0" && pwd && $(MAKE) docker'
 
+
+.PHONY: python-api
+python-api:
+	find python -mindepth 1 -maxdepth 1 -type d -print | xargs -L 1 bash -c 'cd "$$0" && pwd && $(MAKE) api'
+
 .PHONY: py-docker
 py-docker:
 	find python -mindepth 1 -maxdepth 1 -type d -print | xargs -L 1 bash -c 'cd "$$0" && pwd && $(MAKE) docker'
@@ -56,9 +61,12 @@ up: go-docker py-docker
 	docker run -d --rm --name redis -p 6379:6379 redislabs/rebloom:2.2.9 2> /dev/null || true
 	docker run -d --rm --name es -p 9200:9200 -p 9300:9300 -e discovery.type=single-node -e xpack.security.enabled=false -e ES_JAVA_OPTS="-Xms512m -Xmx512m" docker.elastic.co/elasticsearch/elasticsearch:7.17.2 2> /dev/null || true
 	docker run -d --rm --name rabbitmq -p 15672:15672 -p 5672:5672 -e RABBITMQ_DEFAULT_USER= -e RABBITMQ_DEFAULT_PASS= rabbitmq:3.9-management-alpine 2> /dev/null || true
+	docker run -d --rm -p 7171:7171  huangyingting/gowitness gowitness server --address 0.0.0.0:7171 2> /dev/null || true
 	docker run -d --rm --name bg -p 8000:8000 huangyingting/bg 2> /dev/null || true
 	sleep 10s
 	docker run -d --rm --name bi -p 8001:8001 $(DB_ENV) -e BI_AMQP_URI=amqp://host.docker.internal:5672/ -e BI_REMOTE_BG_HTTP_ADDR=host.docker.internal:8000 huangyingting/bi 2> /dev/null || true
+	docker run -d --rm --name be -p 8002:8002 huangyingting/be 2> /dev/null || true
+
 
 .PHONY: down
 down:

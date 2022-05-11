@@ -16,6 +16,8 @@ message Bootstrap {
   JWT jwt = 7;
   bingo.pkg.rabbitmq.PublisherConfig publisher = 8;
   BI bi = 9;
+  BE be = 10;
+  GoWitness go_witness = 11;
 }
 
 message Server {
@@ -84,4 +86,12 @@ message BI {
     HTTP = 1;
   }
   Protocol protocol = 3;
+}
+
+message BE {  
+  string http_addr = 1;
+}
+
+message GoWitness {  
+  string addr = 1;
 }

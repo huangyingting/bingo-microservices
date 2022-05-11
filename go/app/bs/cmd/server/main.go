@@ -9,10 +9,13 @@ import (
 	"path"
 	"path/filepath"
 	"runtime"
+	"strings"
 	"syscall"
 	"time"
 
+	bev1 "bingo/api/be/v1"
 	bsv1 "bingo/api/bs/v1"
+
 	"bingo/app/bs/internal/conf"
 	"bingo/app/bs/internal/service"
 
@@ -28,7 +31,9 @@ import (
 	"github.com/go-kratos/kratos/v2/config/env"
 	"github.com/go-kratos/kratos/v2/config/file"
 	"github.com/go-kratos/kratos/v2/log"
+	"github.com/go-kratos/kratos/v2/middleware/recovery"
 	"github.com/go-kratos/kratos/v2/middleware/tracing"
+	transhttp "github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/xenitab/go-oidc-middleware/oidcgin"
 	opts "github.com/xenitab/go-oidc-middleware/options"
 )
@@ -148,6 +153,7 @@ func main() {
 	mt := multitemplate.NewRenderer()
 	mt.Add("Captcha", CAPTCHA_TEMPLATE)
 	mt.Add("WsDebug", WS_DEBUG_TEMPLATE)
+	mt.Add("Expand", EXPAND_TEMPLATE)
 	r.HTMLRender = mt
 	r.Use(cors.New(corsConfig))
 	r.Use(static.Serve("/", static.LocalFile("website", false)))
@@ -159,6 +165,12 @@ func main() {
 		dir, alias := path.Split(ctx.Request.RequestURI)
 		ext := filepath.Ext(alias)
 		if dir == "/" && alias != "" && ext == "" {
+			// check if it is an expand request
+			expand := alias[len(alias)-1:] == "+"
+			if expand {
+				alias = alias[:len(alias)-1]
+			}
+
 			cachedShortUrl, err := shortUrlService.GetCachedShortUrl(alias)
 
 			// return 404 directly
@@ -169,6 +181,41 @@ func main() {
 			if cachedShortUrl.Disabled {
 				return
 			}
+
+			// use extrace service (be) to reterive title, keywords, summary
+			if expand {
+				conn, err := transhttp.NewClient(
+					context.Background(),
+					transhttp.WithMiddleware(
+						recovery.Recovery(),
+					),
+					transhttp.WithEndpoint(bc.Be.HttpAddr),
+				)
+
+				if err != nil {
+					return
+				}
+
+				defer conn.Close()
+				client := bev1.NewBEHTTPClient(conn)
+				r, err := client.Extract(
+					context.Background(),
+					&bev1.ExtractRequest{Url: cachedShortUrl.Url},
+				)
+				if err != nil {
+					return
+				}
+				ctx.HTML(http.StatusOK, "Expand", gin.H{
+					"Alias":    alias,
+					"Url":      cachedShortUrl.Url,
+					"Title":    r.Title,
+					"Keywords": strings.Join(r.Keywords, " "),
+					"Summary":  r.Summary,
+					"Snapshot": bc.GoWitness.Addr + "/?url=" + cachedShortUrl.Url,
+				})
+				return
+			}
+
 			// if fraud detection is enabled, return re-captcha page
 			if cachedShortUrl.FraudDetection {
 				referrer := "strict-origin-when-cross-origin"
