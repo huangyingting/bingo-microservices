@@ -18,15 +18,15 @@ alias:
   bit_len_time: 35
   bit_len_sequence: 7
   bit_len_machine_id: 5
-  etcd_addr: ["localhost:2379"]
+  etcd_addr: ["${ETCD_ADDR:localhost:2379}"]
 search:
-  addr: ["http://localhost:9200"]
+  addr: ["${ES_ADDR:http://localhost:9200}"]
   index_name: short_url
   sniff: false
   number_of_shards: 1
   number_of_replicas: 0
 cache:
-  addr: localhost:6379
+  addr: "${REDIS_ADDR:localhost:6379}"
   cache_ttl: 3600
 recaptcha:
   site_key: 6Lethl8fAAAAAMEhZak5YlwnJUetY1dLGsaDLMxK

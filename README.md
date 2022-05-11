@@ -21,9 +21,9 @@ Below high level architecture diagram shows each componnent
 
 - Message queue, rabbitmq provides message exchange between BS and BI services. BS service publishes click stream to rabbitmq, and BI service subscribes to click stream.
 
-- Unique alias generator, when create a short url, a 7 characters alias will be generated, bingo supports a [sonyflake](https://github.com/sony/sonyflake) based algorithm to generate this alias among at most 16 machines.
+- Unique alias generator, when create a short url, a 7 characters alias will be generated, bingo supports a [sonyflake](https://github.com/sony/sonyflake) based algorithm to generate this alias.
 
-- Distributed lock, when generate alias, the algorithm requires a unique machine ID so no duplicated alias will be genereated among each machine, ETCD distributed lock is used here to provide this capability.
+- Distributed lock, when generate alias, the algorithm requires a unique machine ID so no duplicated alias will be genereated from each machine, ETCD distributed lock is used here to provide this capability.
 
 - Caching and bloom filter support, on top of database layer, BS service also uses redis for caching and bloom filter to protect database from overloading.
 
@@ -33,8 +33,21 @@ Below high level architecture diagram shows each componnent
 
 ## How to build and run
 ### Build and run locally
-1. git clone https://github.com/huangyingting/bingo-microservices
-2. cd bingo-microservices
-3. make docker
-4. docker-compose up
+1. Clone the repo, 
+    ```
+    git clone https://github.com/huangyingting/bingo-microservices
+    ```
+2. Switch directory to repo, 
+    ```
+    cd bingo-microservices
+    ```
+3. Build container images for each service
+    ```
+    make py-docker
+    make go-docker
+    ```
+4. Start all services 
+    ```
+    docker-compose up
+    ```
 5. Visit URL http://localhost:8080 to login

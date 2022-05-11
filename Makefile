@@ -50,9 +50,8 @@ python-api:
 	find python -mindepth 1 -maxdepth 1 -type d -print | xargs -L 1 bash -c 'cd "$$0" && pwd && $(MAKE) api'
 
 .PHONY: py-docker
-py-docker:
+py-docker: python-api
 	find python -mindepth 1 -maxdepth 1 -type d -print | xargs -L 1 bash -c 'cd "$$0" && pwd && $(MAKE) docker'
-
 
 .PHONY: up
 up: go-docker py-docker
