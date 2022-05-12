@@ -16,7 +16,6 @@ ifeq ($(DB),mongo)
     DB_DOCKER_CMD = docker run -d --rm --name mongo -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=bingo -e MONGO_INITDB_ROOT_PASSWORD=P@ssw0rd -e MONGO_INITDB_DATABASE=bingo mongo:5.0.6 2> /dev/null || true
 endif
 
-
 .PHONY: up
 up:
 	rm configs/config.yaml

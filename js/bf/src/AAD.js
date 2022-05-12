@@ -1,14 +1,14 @@
 import { PublicClientApplication, LogLevel, InteractionRequiredAuthError } from "@azure/msal-browser";
-
+import { BF_CLIENT_ID, BF_SCOPES, BF_AUTHORITY } from "./Global";
 export const loginRequest = {
   scopes: ["User.Read"]
 };
 
 const msalConfig = {
   auth: {
-    clientId: "eea9dc4e-6439-4800-b3b5-8d8fcf926369",
-    authority: "https://login.microsoftonline.com/736e8d18-4edf-4080-96b9-69afaec94892",
-    redirectUri: window.location.protocol + '//' + window.location.host + '/'
+    clientId: BF_CLIENT_ID,
+    authority: BF_AUTHORITY,
+    redirectUri: window.location.protocol + '//' + window.location.host + '/blank.html'
   },
   cache: {
     cacheLocation: "sessionStorage", // This configures where your cache will be stored
@@ -49,7 +49,7 @@ export const GetAccessToken = async () => {
   if (account) {
     try {
       token = await MSAL_INSTANCE.acquireTokenSilent({
-        scopes: ["api://52d63002-b52b-4233-a733-092896d960b6/API.Read", "api://52d63002-b52b-4233-a733-092896d960b6/API.Write"],
+        scopes: BF_SCOPES,
         account: account
       });
     }
@@ -57,7 +57,7 @@ export const GetAccessToken = async () => {
       if (error instanceof InteractionRequiredAuthError) {
         try {
           token = await MSAL_INSTANCE.acquireTokenPopup({
-            scopes: ["api://52d63002-b52b-4233-a733-092896d960b6/API.Read", "api://52d63002-b52b-4233-a733-092896d960b6/API.Write"],
+            scopes: BF_SCOPES,
             account: account
           });
         }

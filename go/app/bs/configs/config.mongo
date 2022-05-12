@@ -7,12 +7,12 @@ server:
     timeout: "${GRPC_TIMEOUT:1s}"
   debug: true
 store:
-  driver: "${DB_DRIVER:sqlite}"
-  host: "${DB_HOST:}"
-  port: "${DB_PORT:0}"
-  database: "${DB_DATABASE:}"
-  username: "${DB_USERNAME:}"
-  password: "${DB_PASSWORD:}"
+  driver: "${DB_DRIVER:mongo}"
+  host: "${DB_HOST:localhost}"
+  port: "${DB_PORT:27017}"
+  database: "${DB_DATABASE:bingo}"
+  username: "${DB_USERNAME:bingo}"
+  password: "${DB_PASSWORD:P@ssw0rd}"
 alias:
   start_time: 2020-01-01
   bit_len_time: 35

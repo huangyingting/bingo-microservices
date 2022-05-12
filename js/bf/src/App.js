@@ -13,8 +13,8 @@ import { AuthenticatedTemplate, UnauthenticatedTemplate } from "@azure/msal-reac
 function App() {
   return (
     <div>
-      <BrowserRouter>
-        <AuthenticatedTemplate>
+      <AuthenticatedTemplate>
+        <BrowserRouter>
           <BsNavbar />
           <Routes>
             <Route exact path="/pages/stats" element={<Stats />} />
@@ -25,11 +25,11 @@ function App() {
             <Route exact path='*' element={<PageNotFound />} />
           </Routes>
           <Footer />
-        </AuthenticatedTemplate>
-        <UnauthenticatedTemplate>
-          <Unauthenticated />
-        </UnauthenticatedTemplate>
-      </BrowserRouter>
+        </BrowserRouter>
+      </AuthenticatedTemplate>
+      <UnauthenticatedTemplate>
+        <Unauthenticated />
+      </UnauthenticatedTemplate>
     </div>
   );
 }
