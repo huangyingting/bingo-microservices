@@ -36,6 +36,13 @@ api: go-api py-api
 .PHONY: docker
 docker: go-docker py-docker
 
+.PHONY: push
+push: docker
+	docker push huangyingting/bg
+	docker push huangyingting/be
+	docker push huangyingting/bi
+	docker push huangyingting/bs
+
 .PHONY: up
 up:
 	docker-compose up -d
