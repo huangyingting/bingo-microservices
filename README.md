@@ -2,9 +2,9 @@
 ## Introduction
 Bingo is a short url application based on microservice's architecture. It helps you create and share branded links at scale. 
 
-The purpose to create this short url application for cloud native showcase is, the business case of generating and using a short url could be simple or complicated at the same time. 
+The purpose of creating this short url application for cloud native showcase is, the business logic of generating and using a short url could be simple or complicated at the both time, which gives us enough space to demo a few of cloud native design principles. 
 
-Below high level architecture diagram shows each componnent
+Below high level architecture diagram shows all related componnents and services
 ![high-level-design](./docs/images/Bingo-Design.svg)
 
 - **BF** - Singal Page Application(SPA), a frontend application written in Javascript with React.js who provides web UI to create and manage short url.
