@@ -337,10 +337,14 @@ func main() {
 			Start int64 `form:"start"`
 			Count int64 `form:"count"`
 		}
-		query := ListShortUrlQuery{Start: 0, Count: 5}
+		query := ListShortUrlQuery{Start: 0, Count: bc.Server.PageSize}
 		if err := ctx.BindQuery(&query); err != nil {
 			ctx.JSON(http.StatusBadRequest, bsv1.ErrorBadRequest(err.Error()))
 			return
+		}
+		// restrict requested page size to maximum page size configured at server
+		if query.Count > bc.Server.PageSize {
+			query.Count = bc.Server.PageSize
 		}
 		oid := GetOid(ctx)
 		response, err := shortUrlService.ListShortUrl(oid, &bsv1.ListShortUrlRequest{

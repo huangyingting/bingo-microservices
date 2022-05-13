@@ -14,7 +14,7 @@ import ShortUrlQnA from './ShortUrlQnA';
 import ShortUrlToast from "./ShortUrlToast";
 import ShortUrlHeader from './ShortUrlHeader';
 import { useForm } from "react-hook-form";
-import { COUNT_PER_PAGE } from "../Global"
+import { PAGE_SIZE } from "../Global"
 import { MdOutlineNavigateBefore, MdOutlineNavigateNext } from "react-icons/md";
 
 function compareArray(array1, array2) {
@@ -38,7 +38,7 @@ function ShortUrl() {
   // dialog
   const swalReact = withReactContent(swal)
   // refresh
-  const [refresh, setRefresh] = useState({ start: 0, count: COUNT_PER_PAGE })
+  const [refresh, setRefresh] = useState({ start: 0, count: PAGE_SIZE })
   // pagination
   const [pagination, setPagination] = useState({ start: 0, count: 0 })
 
@@ -101,7 +101,7 @@ function ShortUrl() {
         "created_at": r.created_at
       }, ...shortUrls.slice(0, 9)])
       */
-      setRefresh({ start: 0, count: COUNT_PER_PAGE })
+      setRefresh({ start: 0, count: PAGE_SIZE })
       showInfoMsg("Short url " + API_ENDPOINT + "/" + r.alias + " is created")
       reset({ url: "", alias: "" })
     } else {
@@ -128,7 +128,7 @@ function ShortUrl() {
           var r = await del('/v1/shorturl/' + alias)
           if (response.ok) {
             // trigger useEffect to list short url again
-            setRefresh({ start: pagination.start, count: COUNT_PER_PAGE })
+            setRefresh({ start: pagination.start, count: PAGE_SIZE })
             showInfoMsg("Alias " + alias + " is deleted")
           } else {
             showErrorMsg(r.message)
@@ -299,7 +299,7 @@ function ShortUrl() {
             "utm_content": i.utm_content,
             "created_at": i.created_at
           }
-        }).slice(0, COUNT_PER_PAGE))
+        }).slice(0, PAGE_SIZE))
       }
       setPagination({ start: shortUrls.start, count: shortUrls.count })
     }
@@ -307,11 +307,11 @@ function ShortUrl() {
   }, [refresh]);
 
   const nextPage = () => {
-    setRefresh({ start: pagination.start + COUNT_PER_PAGE, count: COUNT_PER_PAGE })
+    setRefresh({ start: pagination.start + PAGE_SIZE, count: PAGE_SIZE })
   }
 
   const prevPage = () => {
-    setRefresh({ start: pagination.start - COUNT_PER_PAGE, count: COUNT_PER_PAGE })
+    setRefresh({ start: pagination.start - PAGE_SIZE, count: PAGE_SIZE })
   }
 
   return (
@@ -361,7 +361,7 @@ function ShortUrl() {
             <Row className='row-cols-1 row-cols-md-2'>
               <Col></Col>
               <Col>
-                <Button className="float-end" variant='primary' disabled={pagination.count < COUNT_PER_PAGE} onClick={nextPage}>
+                <Button className="float-end" variant='primary' disabled={pagination.count < PAGE_SIZE} onClick={nextPage}>
                   <MdOutlineNavigateNext />
                 </Button>
                 <Button className="me-1 float-end" variant='primary' disabled={pagination.start === 0} onClick={prevPage}>

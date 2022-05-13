@@ -34,6 +34,7 @@ message Server {
   HTTP http = 1;
   GRPC grpc = 2;
   bool debug = 3;
+  int64 page_size = 4;
 }
 
 message Store {
