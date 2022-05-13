@@ -20,8 +20,14 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          - dockerfile: ./python/be/Dockerfile
+            image: huangyingting/be
           - dockerfile: ./go/app/bg/Dockerfile
             image: huangyingting/bg
+          - dockerfile: ./go/app/bi/Dockerfile
+            image: huangyingting/bi
+          - dockerfile: ./go/app/bs/Dockerfile
+            image: huangyingting/bs            
     permissions:
       contents: read
       packages: write
