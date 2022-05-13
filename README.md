@@ -23,7 +23,7 @@ Below high level architecture diagram shows all related componnents and services
 
 - Message queue, rabbitmq provides message exchange between BS and BI services. BS service publishes click stream to rabbitmq, and BI service subscribes to click stream.
 
-- Unique alias generator, when create a short url, a 7 characters alias will be generated, bingo supports a [sonyflake](https://github.com/sony/sonyflake) based algorithm to generate this alias.
+- Unique alias generator, when create a short url, a 8 characters alias will be generated, bingo supports a [sonyflake](https://github.com/sony/sonyflake) based algorithm to generate this alias.
 
 - Distributed lock, when generate alias, the algorithm requires a unique machine ID so no duplicated alias will be genereated from each machine, ETCD distributed lock is used here to provide this capability.
 
