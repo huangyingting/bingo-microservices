@@ -23,6 +23,3 @@ go.work
 
 # bin directories
 bin/
-
-# specificly to exclude dump.rdb
-dump.rdb
