@@ -130,13 +130,17 @@ func (q *PostgresBSStore) GetShortUrlByOid(alias string, oid string) (*ShortUrl,
 	return &i, err
 }
 
-func (q *PostgresBSStore) ListShortUrl(oid string, limit int64, offset int64) ([]*ShortUrl, error) {
+func (q *PostgresBSStore) ListShortUrl(
+	oid string,
+	start int64,
+	count int64,
+) ([]*ShortUrl, error) {
 	const LIST_SHORT_URL = `
 	SELECT alias, url, oid, title, tags, flags, utm_source, utm_medium, utm_campaign, utm_term, utm_content, created_at FROM short_url
 	WHERE oid = $1 ORDER BY created_at DESC
 	LIMIT $2 OFFSET $3
 	`
-	rows, err := q.db.QueryContext(q.ctx, LIST_SHORT_URL, oid, limit, offset)
+	rows, err := q.db.QueryContext(q.ctx, LIST_SHORT_URL, oid, count, start)
 	if err != nil {
 		return nil, err
 	}

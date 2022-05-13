@@ -148,9 +148,9 @@ func (q *MongoBSStore) GetShortUrlByOid(alias string, oid string) (*ShortUrl, er
 	return &shortUrl, err
 }
 
-func (q *MongoBSStore) ListShortUrl(oid string, limit int64, offset int64) ([]*ShortUrl, error) {
+func (q *MongoBSStore) ListShortUrl(oid string, start int64, count int64) ([]*ShortUrl, error) {
 	collection := q.client.Database(q.database).Collection("short_url")
-	findOpt := options.FindOptions{Limit: &limit, Skip: &offset}
+	findOpt := options.FindOptions{Limit: &count, Skip: &start}
 	cur, err := collection.Find(q.ctx, bson.M{"oid": oid}, &findOpt)
 	if err != nil {
 		return nil, err

@@ -133,13 +133,13 @@ func (q *SqliteBSStore) GetShortUrlByOid(alias string, oid string) (*ShortUrl, e
 	return &i, err
 }
 
-func (q *SqliteBSStore) ListShortUrl(oid string, limit int64, offset int64) ([]*ShortUrl, error) {
+func (q *SqliteBSStore) ListShortUrl(oid string, start int64, count int64) ([]*ShortUrl, error) {
 	const LIST_SHORT_URL = `
 	SELECT alias, url, oid, title, tags, flags, utm_source, utm_medium, utm_campaign, utm_term, utm_content, created_at FROM short_url
 	WHERE oid = ? ORDER BY created_at DESC
 	LIMIT ? OFFSET ?
 	`
-	rows, err := q.db.QueryContext(q.ctx, LIST_SHORT_URL, oid, limit, offset)
+	rows, err := q.db.QueryContext(q.ctx, LIST_SHORT_URL, oid, count, start)
 	if err != nil {
 		return nil, err
 	}

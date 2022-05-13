@@ -24,7 +24,7 @@ service ShortUrl {
       body: "*"
     };
   }
-  rpc ListShortUrl(google.protobuf.Empty) returns (ListShortUrlResponse) {
+  rpc ListShortUrl(ListShortUrlRequest) returns (ListShortUrlResponse) {
     option (google.api.http) = {
       get: "/v1/shorturl"
     };
@@ -122,8 +122,15 @@ message UpdateShortUrlRequest {
   string utm_content = 12;
 }
 
+message ListShortUrlRequest {
+  int64 start = 1;
+  int64 count = 2;
+}
+
 message ListShortUrlResponse {
   repeated ShortUrlResponse value = 1;
+  int64 start = 2;
+  int64 count = 3;
 }
 
 message GetShortUrlRequest {

@@ -333,8 +333,20 @@ func main() {
 
 	// handle list short url request
 	v1.GET("/shorturl", func(ctx *gin.Context) {
+		type ListShortUrlQuery struct {
+			Start int64 `form:"start"`
+			Count int64 `form:"count"`
+		}
+		query := ListShortUrlQuery{Start: 0, Count: 5}
+		if err := ctx.BindQuery(&query); err != nil {
+			ctx.JSON(http.StatusBadRequest, bsv1.ErrorBadRequest(err.Error()))
+			return
+		}
 		oid := GetOid(ctx)
-		response, err := shortUrlService.ListShortUrl(oid)
+		response, err := shortUrlService.ListShortUrl(oid, &bsv1.ListShortUrlRequest{
+			Start: query.Start,
+			Count: query.Count,
+		})
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, bsv1.ErrorInternalServerError(err.Error()))
 			return

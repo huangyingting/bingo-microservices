@@ -14,6 +14,8 @@ import ShortUrlQnA from './ShortUrlQnA';
 import ShortUrlToast from "./ShortUrlToast";
 import ShortUrlHeader from './ShortUrlHeader';
 import { useForm } from "react-hook-form";
+import { COUNT_PER_PAGE } from "../Global"
+import { MdOutlineNavigateBefore, MdOutlineNavigateNext } from "react-icons/md";
 
 function compareArray(array1, array2) {
   const array2Sorted = array2.slice().sort();
@@ -23,20 +25,22 @@ function compareArray(array1, array2) {
 }
 
 function ShortUrl() {
-  // Short url list
+  // short url list
   const [shortUrls, setShortUrls] = useState([]);
-  // Current short url
+  // current short url
   const [currentShortUrl, setCurrentShortUrl] = useState(null)
-  // Error message
+  // error message
   const [errorMsg, setErrorMsg] = useState("")
-  // Copied
+  // copied
   const [infoMsg, setInfoMsg] = useState("")
-  // Show edit
+  // show edit
   const [editVisible, setEditVisible] = useState(false)
-  // Dialog
+  // dialog
   const swalReact = withReactContent(swal)
-  // Search
-  const [search, setSearch] = useState({})
+  // refresh
+  const [refresh, setRefresh] = useState({ start: 0, count: COUNT_PER_PAGE })
+  // pagination
+  const [pagination, setPagination] = useState({ start: 0, count: 0 })
 
   const { register, handleSubmit, reset, formState: { errors } } = useForm({
     criteriaMode: "all",
@@ -79,6 +83,7 @@ function ShortUrl() {
   const createShortUrl = async (v) => {
     var r = await post('/v1/shorturl', { "url": v.url, "alias": v.alias })
     if (response.ok) {
+      /*
       setShortUrls([{
         "url": r.url,
         "alias": r.alias,
@@ -95,6 +100,8 @@ function ShortUrl() {
         "utm_content": r.utm_content,
         "created_at": r.created_at
       }, ...shortUrls.slice(0, 9)])
+      */
+      setRefresh({ start: 0, count: COUNT_PER_PAGE })
       showInfoMsg("Short url " + API_ENDPOINT + "/" + r.alias + " is created")
       reset({ url: "", alias: "" })
     } else {
@@ -120,8 +127,8 @@ function ShortUrl() {
         try {
           var r = await del('/v1/shorturl/' + alias)
           if (response.ok) {
-            // Trigger useEffect to load short url again
-            setSearch({})
+            // trigger useEffect to list short url again
+            setRefresh({ start: pagination.start, count: COUNT_PER_PAGE })
             showInfoMsg("Alias " + alias + " is deleted")
           } else {
             showErrorMsg(r.message)
@@ -273,7 +280,7 @@ function ShortUrl() {
   // load all short urls
   useEffect(() => {
     const listShortUrls = async () => {
-      const shortUrls = await get('/v1/shorturl')
+      const shortUrls = await get('/v1/shorturl?start=' + refresh.start + '&count=' + refresh.count)
       if (response.ok && shortUrls.value != null) {
         setShortUrls(shortUrls.value.map(i => {
           return {
@@ -292,11 +299,20 @@ function ShortUrl() {
             "utm_content": i.utm_content,
             "created_at": i.created_at
           }
-        }).slice(0, 10))
+        }).slice(0, COUNT_PER_PAGE))
       }
+      setPagination({ start: shortUrls.start, count: shortUrls.count })
     }
     listShortUrls()
-  }, [search]);
+  }, [refresh]);
+
+  const nextPage = () => {
+    setRefresh({ start: pagination.start + COUNT_PER_PAGE, count: COUNT_PER_PAGE })
+  }
+
+  const prevPage = () => {
+    setRefresh({ start: pagination.start - COUNT_PER_PAGE, count: COUNT_PER_PAGE })
+  }
 
   return (
     <>
@@ -342,8 +358,21 @@ function ShortUrl() {
               <ShortUrlItem key={item.alias} data={item} copy={copyShortUrl} qrcode={generateQRCode}
                 delete={deleteShortUrl} edit={editShortUrl} showStat={countClicks} />
             ))}
+            <Row className='row-cols-1 row-cols-md-2'>
+              <Col></Col>
+              <Col>
+                <Button className="float-end" variant='primary' disabled={pagination.count < COUNT_PER_PAGE} onClick={nextPage}>
+                  <MdOutlineNavigateNext />
+                </Button>
+                <Button className="me-1 float-end" variant='primary' disabled={pagination.start === 0} onClick={prevPage}>
+                  <MdOutlineNavigateBefore />
+                </Button>
+              </Col>
+            </Row>
           </Col>
         </Row>
+
+
       </Section>
       {currentShortUrl !== null &&
         <ShortUrlEdit visible={editVisible} hide={() => setEditVisible(false)}

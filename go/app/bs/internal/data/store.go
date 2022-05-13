@@ -125,6 +125,6 @@ type IShortUrlStore interface {
 	DeleteShortUrl(alias string, oid string) error
 	GetShortUrl(alias string) (*ShortUrl, error)
 	GetShortUrlByOid(alias string, oid string) (*ShortUrl, error)
-	ListShortUrl(oid string, limit int64, offset int64) ([]*ShortUrl, error)
+	ListShortUrl(oid string, start int64, count int64) ([]*ShortUrl, error)
 	UpdateShortUrl(alias string, oid string, updateShortUrl UpdateShortUrl) error
 }

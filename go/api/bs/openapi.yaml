@@ -35,6 +35,17 @@ paths:
             tags:
                 - ShortUrl
             operationId: ShortUrl_ListShortUrl
+            parameters:
+                - name: start
+                  in: query
+                  schema:
+                    type: integer
+                    format: int64
+                - name: count
+                  in: query
+                  schema:
+                    type: integer
+                    format: int64
             responses:
                 "200":
                     description: OK
@@ -282,6 +293,12 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/ShortUrlResponse'
+                start:
+                    type: integer
+                    format: int64
+                count:
+                    type: integer
+                    format: int64
         MemLoadRequest:
             type: object
             properties:

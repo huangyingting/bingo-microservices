@@ -25,7 +25,7 @@ const _ = grpc.SupportPackageIsVersion7
 type ShortUrlClient interface {
 	CreateShortUrl(ctx context.Context, in *CreateShortUrlRequest, opts ...grpc.CallOption) (*ShortUrlResponse, error)
 	UpdateShortUrl(ctx context.Context, in *UpdateShortUrlRequest, opts ...grpc.CallOption) (*ShortUrlResponse, error)
-	ListShortUrl(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListShortUrlResponse, error)
+	ListShortUrl(ctx context.Context, in *ListShortUrlRequest, opts ...grpc.CallOption) (*ListShortUrlResponse, error)
 	GetShortUrl(ctx context.Context, in *GetShortUrlRequest, opts ...grpc.CallOption) (*ShortUrlResponse, error)
 	DeleteShortUrl(ctx context.Context, in *DeleteShortUrlRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
@@ -56,7 +56,7 @@ func (c *shortUrlClient) UpdateShortUrl(ctx context.Context, in *UpdateShortUrlR
 	return out, nil
 }
 
-func (c *shortUrlClient) ListShortUrl(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListShortUrlResponse, error) {
+func (c *shortUrlClient) ListShortUrl(ctx context.Context, in *ListShortUrlRequest, opts ...grpc.CallOption) (*ListShortUrlResponse, error) {
 	out := new(ListShortUrlResponse)
 	err := c.cc.Invoke(ctx, "/api.shorturl.v1.ShortUrl/ListShortUrl", in, out, opts...)
 	if err != nil {
@@ -89,7 +89,7 @@ func (c *shortUrlClient) DeleteShortUrl(ctx context.Context, in *DeleteShortUrlR
 type ShortUrlServer interface {
 	CreateShortUrl(context.Context, *CreateShortUrlRequest) (*ShortUrlResponse, error)
 	UpdateShortUrl(context.Context, *UpdateShortUrlRequest) (*ShortUrlResponse, error)
-	ListShortUrl(context.Context, *emptypb.Empty) (*ListShortUrlResponse, error)
+	ListShortUrl(context.Context, *ListShortUrlRequest) (*ListShortUrlResponse, error)
 	GetShortUrl(context.Context, *GetShortUrlRequest) (*ShortUrlResponse, error)
 	DeleteShortUrl(context.Context, *DeleteShortUrlRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedShortUrlServer()
@@ -105,7 +105,7 @@ func (UnimplementedShortUrlServer) CreateShortUrl(context.Context, *CreateShortU
 func (UnimplementedShortUrlServer) UpdateShortUrl(context.Context, *UpdateShortUrlRequest) (*ShortUrlResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateShortUrl not implemented")
 }
-func (UnimplementedShortUrlServer) ListShortUrl(context.Context, *emptypb.Empty) (*ListShortUrlResponse, error) {
+func (UnimplementedShortUrlServer) ListShortUrl(context.Context, *ListShortUrlRequest) (*ListShortUrlResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListShortUrl not implemented")
 }
 func (UnimplementedShortUrlServer) GetShortUrl(context.Context, *GetShortUrlRequest) (*ShortUrlResponse, error) {
@@ -164,7 +164,7 @@ func _ShortUrl_UpdateShortUrl_Handler(srv interface{}, ctx context.Context, dec 
 }
 
 func _ShortUrl_ListShortUrl_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(ListShortUrlRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -176,7 +176,7 @@ func _ShortUrl_ListShortUrl_Handler(srv interface{}, ctx context.Context, dec fu
 		FullMethod: "/api.shorturl.v1.ShortUrl/ListShortUrl",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ShortUrlServer).ListShortUrl(ctx, req.(*emptypb.Empty))
+		return srv.(ShortUrlServer).ListShortUrl(ctx, req.(*ListShortUrlRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

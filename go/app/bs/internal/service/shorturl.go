@@ -211,12 +211,19 @@ func (s *ShortUrlService) CreateShortUrl(
 	return v, nil
 }
 
-func (s *ShortUrlService) ListShortUrl(oid string) (*bsv1.ListShortUrlResponse, error) {
+func (s *ShortUrlService) ListShortUrl(
+	oid string,
+	request *bsv1.ListShortUrlRequest,
+) (*bsv1.ListShortUrlResponse, error) {
 	r := &bsv1.ListShortUrlResponse{
 		Value: make([]*bsv1.ShortUrlResponse, 0),
+		Start: request.Start,
+		Count: 0,
 	}
 
-	shortUrls, err := s.store.ListShortUrl(oid, 10, 0)
+	s.h.Debugf("list short url request: %v", request)
+
+	shortUrls, err := s.store.ListShortUrl(oid, request.Start, request.Count)
 	if err != nil {
 		s.h.Errorf("list short url failed: %v", err)
 		return nil, err
@@ -242,6 +249,8 @@ func (s *ShortUrlService) ListShortUrl(oid string) (*bsv1.ListShortUrlResponse, 
 			},
 		)
 	}
+
+	r.Count = int64(len(r.Value))
 
 	// return short urls
 	return r, nil

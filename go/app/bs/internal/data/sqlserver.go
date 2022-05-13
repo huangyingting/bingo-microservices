@@ -135,8 +135,8 @@ func (q *SQLServerBSStore) GetShortUrlByOid(alias string, oid string) (*ShortUrl
 
 func (q *SQLServerBSStore) ListShortUrl(
 	oid string,
-	limit int64,
-	offset int64,
+	start int64,
+	count int64,
 ) ([]*ShortUrl, error) {
 	const LIST_SHORT_URL = `
 	SELECT alias, url, oid, title, tags, flags, utm_source, utm_medium, utm_campaign, utm_term, utm_content, created_at FROM short_url
@@ -144,7 +144,7 @@ func (q *SQLServerBSStore) ListShortUrl(
 	OFFSET @p2 ROWS
 	FETCH NEXT @p3 ROWS ONLY
 	`
-	rows, err := q.db.QueryContext(q.ctx, LIST_SHORT_URL, oid, offset, limit)
+	rows, err := q.db.QueryContext(q.ctx, LIST_SHORT_URL, oid, start, count)
 	if err != nil {
 		return nil, err
 	}
