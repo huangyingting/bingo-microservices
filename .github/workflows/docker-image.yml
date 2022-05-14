@@ -1,4 +1,4 @@
-name: Build & publish bingo images
+name: Build & publish docker images
 
 on:
   push:

@@ -35,12 +35,12 @@ Below high level architecture diagram shows all related componnents and services
 
 ## How to build and run
 ### Prerequisite
-Bingo replies on AAD to provide authentication & authorization, the application itself is pre-configured with an AAD already, if you prefer to use your own AAD tenant, below are the brief steps
+Bingo replies on AAD to provide authentication & authorization, the application itself is pre-configured with an AAD tenant already, if you prefer to use your own AAD tenant, below are the brief steps
 - Create an AAD or AAD B2C tenant
 - Associate a custom domain name
 - Add a few of users into the tenant
 - Register AAD client application(used by BF) and api application(used by BS)
-- Create scopes for api application and assign those socpe as API permission to client application
+- Create scopes for api application then assign those socpes as API permissions to client application
 - Record client application id, scopes and oauth2 endpoint, those information are required to configure client app and BS service. For more details, refer to js/bf/src/Global.js and go/app/bs/configs/config.yaml
 
 References
