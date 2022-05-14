@@ -2,11 +2,10 @@
 FROM node:16-alpine AS react-build
 ARG VERSION
 WORKDIR /build
-COPY js/bf/package*.json ./
-RUN npm i -g npm
-RUN npm install --silent
+COPY js/bf/package.json js/bf/yarn.lock ./
+RUN yarn install --pure-lockfile
 COPY js/bf/ ./
-RUN npm run build
+RUN yarn build
 
 # build bs
 FROM golang:1.18-alpine as go-build

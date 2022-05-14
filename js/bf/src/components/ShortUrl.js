@@ -281,27 +281,29 @@ function ShortUrl() {
   useEffect(() => {
     const listShortUrls = async () => {
       const shortUrls = await get('/v1/shorturl?start=' + refresh.start + '&count=' + refresh.count)
-      if (response.ok && shortUrls.value != null) {
-        setShortUrls(shortUrls.value.map(i => {
-          return {
-            "url": i.url,
-            "alias": i.alias,
-            "short_url": API_ENDPOINT + "/" + i.alias,
-            "title": i.title,
-            "tags": i.tags,
-            "fraud_detection": i.fraud_detection,
-            "disabled": i.disabled,
-            "no_referrer": i.no_referrer,
-            "utm_source": i.utm_source,
-            "utm_medium": i.utm_medium,
-            "utm_campaign": i.utm_campaign,
-            "utm_term": i.utm_term,
-            "utm_content": i.utm_content,
-            "created_at": i.created_at
-          }
-        }).slice(0, PAGE_SIZE))
+      if (response.ok) {
+        if (shortUrls.value != null) {
+          setShortUrls(shortUrls.value.map(i => {
+            return {
+              "url": i.url,
+              "alias": i.alias,
+              "short_url": API_ENDPOINT + "/" + i.alias,
+              "title": i.title,
+              "tags": i.tags,
+              "fraud_detection": i.fraud_detection,
+              "disabled": i.disabled,
+              "no_referrer": i.no_referrer,
+              "utm_source": i.utm_source,
+              "utm_medium": i.utm_medium,
+              "utm_campaign": i.utm_campaign,
+              "utm_term": i.utm_term,
+              "utm_content": i.utm_content,
+              "created_at": i.created_at
+            }
+          }).slice(0, PAGE_SIZE))
+        }
+        setPagination({ start: shortUrls.start, count: shortUrls.count })
       }
-      setPagination({ start: shortUrls.start, count: shortUrls.count })
     }
     listShortUrls()
   }, [refresh]);
