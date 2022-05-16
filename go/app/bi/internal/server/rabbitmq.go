@@ -11,6 +11,7 @@ import (
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
+	"github.com/go-kratos/kratos/v2/middleware/tracing"
 	transgrpc "github.com/go-kratos/kratos/v2/transport/grpc"
 	transhttp "github.com/go-kratos/kratos/v2/transport/http"
 	amqp "github.com/rabbitmq/amqp091-go"
@@ -23,6 +24,7 @@ func location(g *conf.Geo, clickEvent *v1.ClickEvent) (rsp *bgv1.LocationReply, 
 			context.Background(),
 			transhttp.WithMiddleware(
 				recovery.Recovery(),
+				tracing.Client(),
 			),
 			transhttp.WithEndpoint(g.HttpAddr),
 		)
@@ -41,6 +43,7 @@ func location(g *conf.Geo, clickEvent *v1.ClickEvent) (rsp *bgv1.LocationReply, 
 		transgrpc.WithEndpoint(g.HttpAddr),
 		transgrpc.WithMiddleware(
 			recovery.Recovery(),
+			tracing.Client(),
 		),
 	)
 	if err != nil {

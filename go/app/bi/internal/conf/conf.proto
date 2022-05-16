@@ -10,6 +10,7 @@ message Bootstrap {
   Store store = 2;
   Geo geo = 3;
   bingo.pkg.rabbitmq.SubscriberConfig subscriber = 4;
+  Jaeger jaeger = 5;
 }
 
 message Server {
@@ -44,4 +45,8 @@ message Geo {
     HTTP = 1;
   }
   Protocol protocol = 3;
+}
+
+message Jaeger {
+  string addr = 1;
 }

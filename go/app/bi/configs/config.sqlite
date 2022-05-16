@@ -30,3 +30,5 @@ subscriber:
   connect_attempt: 3
   retry_interval: 5s
   reconnect_attempt: 0
+jaeger:
+  addr: "${JAEGER_ADDR:http://localhost:14268/api/traces}"

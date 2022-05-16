@@ -13,6 +13,11 @@ services:
       - MYSQL_DATABASE=bingo
     ports:
       - 3306:3306
+  jaeger:
+    image: jaegertracing/all-in-one:1.34
+    ports:
+      - 16686:16686
+      - 14268:14268      
   etcd:
     image: bitnami/etcd:3.5.3
     environment:
@@ -53,6 +58,8 @@ services:
     ports:
       - 8000:8000
       - 9000:9000
+    environment:
+      - BG_JAEGER_ADDR=http://jaeger:14268/api/traces      
   bi:
     image: huangyingting/bi
     build: 
@@ -70,6 +77,7 @@ services:
       - BI_DB_PASSWORD=P@ssw0rd
       - BI_AMQP_URI=amqp://rabbitmq:5672/
       - BI_REMOTE_BG_HTTP_ADDR=bg:8000
+      - BI_JAEGER_ADDR=http://jaeger:14268/api/traces
     depends_on:
       mysql:
         condition: service_healthy
@@ -82,6 +90,8 @@ services:
       dockerfile: python/be/Dockerfile
     ports:
       - 8002:8002
+    environment:
+      - BE_JAEGER_ADDR=http://jaeger:14268/api/traces
   bs:
     image: huangyingting/bs
     build: 
@@ -103,6 +113,7 @@ services:
       - BS_REMOTE_BI_HTTP_ADDR=bi:8001
       - BS_REMOTE_BE_HTTP_ADDR=be:8002
       - REMOTE_GO_WITNESS_ADDR=http://localhost:7171
+      - BS_JAEGER_ADDR=http://jaeger:14268/api/traces
     depends_on:
       mysql:
         condition: service_healthy

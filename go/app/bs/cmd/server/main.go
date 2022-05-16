@@ -36,6 +36,13 @@ import (
 	transhttp "github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/xenitab/go-oidc-middleware/oidcgin"
 	opts "github.com/xenitab/go-oidc-middleware/options"
+	"go.opentelemetry.io/contrib/instrumentation/github.com/gin-gonic/gin/otelgin"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/exporters/jaeger"
+	"go.opentelemetry.io/otel/sdk/resource"
+	tracesdk "go.opentelemetry.io/otel/sdk/trace"
+	semconv "go.opentelemetry.io/otel/semconv/v1.4.0"
 )
 
 var (
@@ -69,7 +76,7 @@ func init() {
 	)
 }
 
-func NewOpenIdHandler(c *conf.JWT) gin.HandlerFunc {
+func openIDHandler(c *conf.JWT) gin.HandlerFunc {
 	var opts []opts.Option = []opts.Option{
 		opts.WithIssuer(c.Issuer),
 		opts.WithRequiredTokenType("JWT"),
@@ -80,7 +87,7 @@ func NewOpenIdHandler(c *conf.JWT) gin.HandlerFunc {
 	return oidcgin.New(opts...)
 }
 
-func GetOid(c *gin.Context) string {
+func getOID(c *gin.Context) string {
 	var oid interface{} = nil
 	claimsValue, found := c.Get("claims")
 	if found {
@@ -95,6 +102,30 @@ func GetOid(c *gin.Context) string {
 	return ""
 }
 
+// initTracer init jaeger tracer provider
+func initTracer(url string) error {
+	// create the jaeger exporter
+	exp, err := jaeger.New(jaeger.WithCollectorEndpoint(jaeger.WithEndpoint(url)))
+	if err != nil {
+		return err
+	}
+	tp := tracesdk.NewTracerProvider(
+		// set the sampling rate based on the parent span to 100%
+		tracesdk.WithSampler(tracesdk.ParentBased(tracesdk.TraceIDRatioBased(1.0))),
+		// always be sure to batch in production.
+		tracesdk.WithBatcher(exp),
+		// record information about this application in an Resource.
+		tracesdk.WithResource(resource.NewSchemaless(
+			semconv.ServiceNameKey.String(Name),
+			attribute.String("env", "dev"),
+		)),
+	)
+	otel.SetTracerProvider(tp)
+	// otel.SetTextMapPropagator(propagation.NewCompositeTextMapPropagator(
+	//  	propagation.TraceContext{}, propagation.Baggage{}))
+	return nil
+}
+
 func main() {
 	flag.Parse()
 	logger := log.With(log.NewStdLogger(os.Stdout),
@@ -103,8 +134,6 @@ func main() {
 		"service.id", id,
 		"service.name", Name,
 		"service.version", Version,
-		"trace.id", tracing.TraceID(),
-		"span.id", tracing.SpanID(),
 	)
 	h := log.NewHelper(log.NewFilter(logger, log.FilterLevel(log.LevelDebug)))
 
@@ -127,6 +156,10 @@ func main() {
 
 	h.Debugf("dump config: %v", &bc)
 
+	if err := initTracer(bc.Jaeger.Addr); err != nil {
+		panic(err)
+	}
+
 	shortUrlService, err := service.NewShortUrlService(&bc, h)
 	if err != nil {
 		panic(err)
@@ -148,6 +181,9 @@ func main() {
 		gin.SetMode(gin.ReleaseMode)
 	}
 	r := gin.Default()
+
+	//r.Use(otelgin.Middleware("bs", otelgin.WithPropagators(p)))
+	r.Use(otelgin.Middleware("bs"))
 
 	// multi-template
 	mt := multitemplate.NewRenderer()
@@ -184,10 +220,12 @@ func main() {
 
 			// use extrace service (be) to reterive title, keywords, summary
 			if expand {
+				otelCtx := ctx.Request.Context()
 				conn, err := transhttp.NewClient(
-					context.Background(),
+					otelCtx,
 					transhttp.WithMiddleware(
 						recovery.Recovery(),
+						tracing.Client(),
 					),
 					transhttp.WithEndpoint(bc.Be.HttpAddr),
 				)
@@ -199,13 +237,13 @@ func main() {
 				defer conn.Close()
 				client := bev1.NewBEHTTPClient(conn)
 				r, err := client.Extract(
-					context.Background(),
+					otelCtx,
 					&bev1.ExtractRequest{Url: cachedShortUrl.Url},
 				)
 				if err != nil {
 					return
 				}
-				ctx.HTML(http.StatusOK, "Expand", gin.H{
+				otelgin.HTML(ctx, http.StatusOK, "Expand", gin.H{
 					"Alias":    alias,
 					"Url":      cachedShortUrl.Url,
 					"Title":    r.Title,
@@ -222,7 +260,7 @@ func main() {
 				if cachedShortUrl.NoReferrer {
 					referrer = "no-referrer"
 				}
-				ctx.HTML(http.StatusOK, "Captcha", gin.H{
+				otelgin.HTML(ctx, http.StatusOK, "Captcha", gin.H{
 					"Alias":            alias,
 					"RecaptchaSiteKey": bc.Recaptcha.SiteKey,
 					"Referrer":         referrer})
@@ -243,7 +281,7 @@ func main() {
 
 	// web socket handling
 	r.GET("/ws/debug", func(ctx *gin.Context) {
-		ctx.HTML(http.StatusOK, "WsDebug", gin.H{
+		otelgin.HTML(ctx, http.StatusOK, "WsDebug", gin.H{
 			"Host": ctx.Request.Host})
 	})
 	r.GET("/ws", func(ctx *gin.Context) {
@@ -275,7 +313,7 @@ func main() {
 	})
 
 	// use oidc to verify jwt token in following apis
-	openIdHandler := NewOpenIdHandler(bc.Jwt)
+	openIdHandler := openIDHandler(bc.Jwt)
 	v1 := r.Group("/v1", openIdHandler)
 
 	// ping is used to measure client latency
@@ -322,7 +360,7 @@ func main() {
 			ctx.JSON(http.StatusBadRequest, bsv1.ErrorBadRequest(err.Error()))
 			return
 		}
-		oid := GetOid(ctx)
+		oid := getOID(ctx)
 		var response *bsv1.ShortUrlResponse
 		if response, err = shortUrlService.CreateShortUrl(oid, &request); err != nil {
 			ctx.JSON(http.StatusInternalServerError, bsv1.ErrorInternalServerError(err.Error()))
@@ -346,7 +384,7 @@ func main() {
 		if query.Count > bc.Server.PageSize {
 			query.Count = bc.Server.PageSize
 		}
-		oid := GetOid(ctx)
+		oid := getOID(ctx)
 		response, err := shortUrlService.ListShortUrl(oid, &bsv1.ListShortUrlRequest{
 			Start: query.Start,
 			Count: query.Count,
@@ -361,7 +399,7 @@ func main() {
 	// handle get short url request
 	v1.GET("/shorturl/:alias", func(ctx *gin.Context) {
 		request := bsv1.GetShortUrlRequest{Alias: ctx.Param("alias")}
-		oid := GetOid(ctx)
+		oid := getOID(ctx)
 		response, err := shortUrlService.GetShortUrl(oid, &request)
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, bsv1.ErrorInternalServerError(err.Error()))
@@ -377,7 +415,7 @@ func main() {
 			ctx.JSON(http.StatusBadRequest, bsv1.ErrorBadRequest(err.Error()))
 			return
 		}
-		oid := GetOid(ctx)
+		oid := getOID(ctx)
 		response, err := shortUrlService.UpdateShortUrl(oid, &request)
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, bsv1.ErrorInternalServerError(err.Error()))
@@ -391,7 +429,7 @@ func main() {
 		request := bsv1.DeleteShortUrlRequest{
 			Alias: ctx.Param("alias"),
 		}
-		oid := GetOid(ctx)
+		oid := getOID(ctx)
 		err := shortUrlService.DeleteShortUrl(oid, &request)
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, bsv1.ErrorInternalServerError(err.Error()))
@@ -403,7 +441,7 @@ func main() {
 	// handle count clicks request
 	v1.GET("/shorturl-bi/clicks/:alias", func(ctx *gin.Context) {
 		request := bsv1.ClicksRequest{Alias: ctx.Param("alias")}
-		response, err := shortUrlService.CountClicks(bc.Bi, &request)
+		response, err := shortUrlService.CountClicks(bc.Bi, &request, ctx.Request.Context())
 		if err != nil {
 			ctx.JSON(http.StatusBadGateway, bsv1.ErrorBadGateway(err.Error()))
 		} else {

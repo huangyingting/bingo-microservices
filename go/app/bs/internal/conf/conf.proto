@@ -18,6 +18,7 @@ message Bootstrap {
   BI bi = 9;
   BE be = 10;
   GoWitness go_witness = 11;
+  Jaeger jaeger = 12;
 }
 
 message Server {
@@ -94,5 +95,9 @@ message BE {
 }
 
 message GoWitness {  
+  string addr = 1;
+}
+
+message Jaeger {
   string addr = 1;
 }

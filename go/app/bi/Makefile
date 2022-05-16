@@ -20,6 +20,7 @@ endif
 up:
 	rm configs/config.yaml
 	cp configs/config.$(DB) configs/config.yaml
+	docker run -d --rm --name jaeger -p 16686:16686 -p 14268:14268 jaegertracing/all-in-one:1.34 2> /dev/null || true
 	docker run -d --rm --name rabbitmq -p 15672:15672 -p 5672:5672 -e RABBITMQ_DEFAULT_USER= -e RABBITMQ_DEFAULT_PASS= rabbitmq:3.9-management-alpine 2> /dev/null || true
 	$(DB_DOCKER_CMD)
 
@@ -27,3 +28,4 @@ up:
 down:
 	docker stop rabbitmq 2> /dev/null || true
 	docker stop $(DB) 2> /dev/null || true
+	docker stop jaeger 2> /dev/null || true

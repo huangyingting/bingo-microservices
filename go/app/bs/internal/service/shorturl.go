@@ -21,6 +21,7 @@ import (
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
+	"github.com/go-kratos/kratos/v2/middleware/tracing"
 	transgrpc "github.com/go-kratos/kratos/v2/transport/grpc"
 	transhttp "github.com/go-kratos/kratos/v2/transport/http"
 	"google.golang.org/protobuf/proto"
@@ -483,12 +484,16 @@ func (ss *ShortUrlService) SiteVerify(
 func (ss *ShortUrlService) CountClicks(
 	c *conf.BI,
 	request *bsv1.ClicksRequest,
+	ctx context.Context,
 ) (*bsv1.ClicksReply, error) {
+
 	if c.Protocol == conf.BI_HTTP {
 		conn, err := transhttp.NewClient(
-			context.Background(),
+			ctx,
 			transhttp.WithMiddleware(
 				recovery.Recovery(),
+				//tracing.Client(tracing.WithPropagator(otel.GetTextMapPropagator())),
+				tracing.Client(),
 			),
 			transhttp.WithEndpoint(c.HttpAddr),
 		)
@@ -499,7 +504,7 @@ func (ss *ShortUrlService) CountClicks(
 
 		defer conn.Close()
 		client := biv1.NewBIHTTPClient(conn)
-		r, err := client.Clicks(context.Background(), &biv1.ClicksRequest{Alias: request.Alias})
+		r, err := client.Clicks(ctx, &biv1.ClicksRequest{Alias: request.Alias})
 		if err != nil {
 			return nil, err
 		}
@@ -507,10 +512,11 @@ func (ss *ShortUrlService) CountClicks(
 	}
 
 	conn, err := transgrpc.DialInsecure(
-		context.Background(),
+		ctx,
 		transgrpc.WithEndpoint(c.HttpAddr),
 		transgrpc.WithMiddleware(
 			recovery.Recovery(),
+			tracing.Client(),
 		),
 	)
 	if err != nil {
@@ -518,7 +524,7 @@ func (ss *ShortUrlService) CountClicks(
 	}
 	defer conn.Close()
 	client := biv1.NewBIClient(conn)
-	r, err := client.Clicks(context.Background(), &biv1.ClicksRequest{Alias: request.Alias})
+	r, err := client.Clicks(ctx, &biv1.ClicksRequest{Alias: request.Alias})
 
 	if err != nil {
 		return nil, err

@@ -26,15 +26,16 @@ endif
 .PHONY: up
 up:
 	$(DB_DOCKER_CMD)
+	docker run -d --rm --name jaeger -p 16686:16686 -p 14268:14268 jaegertracing/all-in-one:1.34 2> /dev/null || true
 	docker run -d --rm --name etcd -p 2379:2379 -e ALLOW_NONE_AUTHENTICATION=yes bitnami/etcd:3.5.3 2> /dev/null || true
 	docker run -d --rm --name redis -p 6379:6379 redislabs/rebloom:2.2.9 2> /dev/null || true
 	docker run -d --rm --name es -p 9200:9200 -p 9300:9300 -e discovery.type=single-node -e xpack.security.enabled=false -e ES_JAVA_OPTS="-Xms512m -Xmx512m" docker.elastic.co/elasticsearch/elasticsearch:7.17.2 2> /dev/null || true
 	docker run -d --rm --name rabbitmq -p 15672:15672 -p 5672:5672 -e RABBITMQ_DEFAULT_USER= -e RABBITMQ_DEFAULT_PASS= rabbitmq:3.9-management-alpine 2> /dev/null || true
 	docker run -d --rm --name gowitness -p 7171:7171 huangyingting/gowitness gowitness server --address 0.0.0.0:7171 2> /dev/null || true
-	docker run -d --rm --name bg -p 8000:8000 huangyingting/bg 2> /dev/null || true
+	docker run -d --rm --name bg -p 8000:8000 -e BG_JAEGER_ADDR=http://host.docker.internal:14268/api/traces huangyingting/bg 2> /dev/null || true
 	sleep 10s
-	docker run -d --rm --name bi -p 8001:8001 $(DB_ENV) -e BI_AMQP_URI=amqp://host.docker.internal:5672/ -e BI_REMOTE_BG_HTTP_ADDR=host.docker.internal:8000 huangyingting/bi 2> /dev/null || true
-	docker run -d --rm --name be -p 8002:8002 huangyingting/be 2> /dev/null || true
+	docker run -d --rm --name bi -p 8001:8001 $(DB_ENV) -e BI_AMQP_URI=amqp://host.docker.internal:5672/ -e BI_REMOTE_BG_HTTP_ADDR=host.docker.internal:8000 -e BI_JAEGER_ADDR=http://host.docker.internal:14268/api/traces huangyingting/bi 2> /dev/null || true
+	docker run -d --rm --name be -p 8002:8002 -e BE_JAEGER_ADDR=http://host.docker.internal:14268/api/traces huangyingting/be 2> /dev/null || true
 	rm -f configs/config.yaml
 	cp configs/config.$(DB) configs/config.yaml
 	cd cmd/server && go run .
@@ -51,5 +52,6 @@ down:
 	docker stop redis 2> /dev/null || true
 	docker stop etcd 2> /dev/null || true
 	docker stop $(DB) 2> /dev/null || true
+	docker stop jaeger 2> /dev/null || true
 	rm -f configs/config.yaml
 	cp configs/config.sqlite configs/config.yaml	

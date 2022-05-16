@@ -4,9 +4,30 @@
 
 from flask import Flask, jsonify, request
 from newspaper import Article
+from opentelemetry.instrumentation.flask import FlaskInstrumentor
+from opentelemetry import trace
+from opentelemetry.exporter.jaeger.thrift import JaegerExporter
+from opentelemetry.sdk.resources import SERVICE_NAME, Resource
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import BatchSpanProcessor
+from opentelemetry.instrumentation.requests import RequestsInstrumentor
+import os
+
+trace.set_tracer_provider(
+TracerProvider(
+        resource=Resource.create({SERVICE_NAME: "be"})
+    )
+)
+tracer = trace.get_tracer(__name__)
+jaeger_exporter = JaegerExporter(
+    collector_endpoint=os.getenv('BE_JAEGER_ADDR', 'http://localhost:14268/api/traces'),
+)
+span_processor = BatchSpanProcessor(jaeger_exporter)
+trace.get_tracer_provider().add_span_processor(span_processor)
 
 app = Flask(__name__)
-
+FlaskInstrumentor().instrument_app(app)
+RequestsInstrumentor().instrument()
 
 @app.route('/v1/extract', methods=['POST'])
 def extract_html():

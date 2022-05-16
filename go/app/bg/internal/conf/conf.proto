@@ -7,6 +7,7 @@ import "google/protobuf/duration.proto";
 message Bootstrap {
   Server server = 1;
   Redis redis =2;
+  Jaeger jaeger = 3;
 }
 
 message Server {
@@ -25,5 +26,9 @@ message Server {
 }
 
 message Redis {
+  string addr = 1;
+}
+
+message Jaeger {
   string addr = 1;
 }

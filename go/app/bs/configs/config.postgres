@@ -61,4 +61,6 @@ bi:
 be:
   http_addr: "${REMOTE_BE_HTTP_ADDR:localhost:8002}"
 go_witness:
-  addr: "${REMOTE_GO_WITNESS_ADDR:http://localhost:7171}"  
+  addr: "${REMOTE_GO_WITNESS_ADDR:http://localhost:7171}"
+jaeger:
+  addr: "${JAEGER_ADDR:http://localhost:14268/api/traces}"  
