@@ -17,6 +17,8 @@ Below high level architecture diagram shows all related componnents and services
 ## Features
 - Multiple database types support, including sqlite(testing purpose), mysql, postgres, sql server and mongodb.
 
+- Observability support, all microservices support logging, metrics(prometheus exporter), and tracing (jaeger based distributed tracing support).
+
 - AAD authentication & authorization support, BS APIs are protected by oauth so only valiated user can call those APIs to create, edit, update and delete.
 
 - REST, GRPC and Websocket. REST API is exposed for external use, internally, BE and BI services support GRPC. Websocket is enabled on BS service to send back server updated message.
