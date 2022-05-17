@@ -23,6 +23,7 @@ import (
 
 	"bingo/app/bs/internal/system"
 
+	"github.com/Depado/ginprom"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/multitemplate"
 	"github.com/gin-contrib/static"
@@ -180,7 +181,19 @@ func main() {
 	} else {
 		gin.SetMode(gin.ReleaseMode)
 	}
-	r := gin.Default()
+	r := gin.New()
+	if bc.Server.Debug {
+		r.Use(gin.Logger(), gin.Recovery())
+	} else {
+		r.Use(gin.Recovery())
+	}
+
+	p := ginprom.New(
+		ginprom.Engine(r),
+		ginprom.Subsystem("bs"),
+		ginprom.Path("/metrics"),
+	)
+	r.Use(p.Instrument())
 
 	//r.Use(otelgin.Middleware("bs", otelgin.WithPropagators(p)))
 	r.Use(otelgin.Middleware("bs"))
@@ -195,12 +208,20 @@ func main() {
 	r.Use(static.Serve("/", static.LocalFile("website", false)))
 	r.StaticFile("/", "website/index.html")
 
-	// handle short url redirect
+	// to support react router
+	// redirect to index html so react router gets chance to handle the browser routing
 	r.NoRoute(func(ctx *gin.Context) {
 		h.Debugf("no route: %s", ctx.Request.RequestURI)
-		dir, alias := path.Split(ctx.Request.RequestURI)
+		dir, _ := path.Split(ctx.Request.RequestURI)
+		if dir == "/pages/" {
+			ctx.File("./website/index.html")
+		}
+	})
+
+	r.GET("/:alias", func(ctx *gin.Context) {
+		alias := ctx.Param("alias")
 		ext := filepath.Ext(alias)
-		if dir == "/" && alias != "" && ext == "" {
+		if alias != "" && ext == "" {
 			// check if it is an expand request
 			expand := alias[len(alias)-1:] == "+"
 			if expand {
@@ -209,12 +230,15 @@ func main() {
 
 			cachedShortUrl, err := shortUrlService.GetCachedShortUrl(alias)
 
-			// return 404 directly
+			// return 404 directly instead of detailed error to avoid attack
 			if err != nil {
+				ctx.String(http.StatusNotFound, "404 page not found")
+				// ctx.String(http.StatusInternalServerError, err.Error())
 				return
 			}
 			// if short url is disabled, return 404 directly
 			if cachedShortUrl.Disabled {
+				ctx.String(http.StatusNotFound, "404 page not found")
 				return
 			}
 
@@ -229,18 +253,22 @@ func main() {
 					),
 					transhttp.WithEndpoint(bc.Be.HttpAddr),
 				)
-
+				// return 404 directly instead of detailed error to avoid attack
 				if err != nil {
+					ctx.String(http.StatusNotFound, "404 page not found")
+					// ctx.String(http.StatusInternalServerError, err.Error())
 					return
 				}
-
 				defer conn.Close()
 				client := bev1.NewBEHTTPClient(conn)
 				r, err := client.Extract(
 					otelCtx,
 					&bev1.ExtractRequest{Url: cachedShortUrl.Url},
 				)
+				// return 404 directly instead of detailed error to avoid attack
 				if err != nil {
+					ctx.String(http.StatusNotFound, "404 page not found")
+					// ctx.String(http.StatusInternalServerError, err.Error())
 					return
 				}
 				otelgin.HTML(ctx, http.StatusOK, "Expand", gin.H{
@@ -274,8 +302,8 @@ func main() {
 				ctx.Request.Referer(),
 			)
 			ctx.Redirect(http.StatusFound, cachedShortUrl.GeneratedUrl())
-		} else if dir == "/pages/" {
-			ctx.File("./website/index.html")
+		} else {
+			ctx.String(http.StatusNotFound, "404 page not found")
 		}
 	})
 
