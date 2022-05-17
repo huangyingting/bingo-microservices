@@ -12,6 +12,7 @@ from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.instrumentation.requests import RequestsInstrumentor
 import os
+from prometheus_flask_exporter.multiprocess import GunicornInternalPrometheusMetrics
 
 trace.set_tracer_provider(
 TracerProvider(
@@ -26,6 +27,7 @@ span_processor = BatchSpanProcessor(jaeger_exporter)
 trace.get_tracer_provider().add_span_processor(span_processor)
 
 app = Flask(__name__)
+metrics = GunicornInternalPrometheusMetrics(app)
 FlaskInstrumentor().instrument_app(app)
 RequestsInstrumentor().instrument()
 
@@ -50,6 +52,12 @@ def extract_html():
 
     return jsonify(response), 200
 
+metrics.register_default(
+    metrics.counter(
+        'by_path_counter', 'Request count by request paths',
+        labels={'path': lambda: request.path}
+    )
+)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8002, debug=True)
