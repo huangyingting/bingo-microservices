@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: be
+  labels:
+    app: be
+spec:
+  ports:
+  - name: http
+    port: 8002
+    targetPort: 8002
+  selector:
+    app: be
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: be
+  labels:
+    app: be
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: be
+  template:
+    metadata:
+      labels:
+        app: be
+    spec:
+      containers:
+      - name: be
+        image: ghcr.io/huangyingting/be:latest
+        env:
+        - name: BE_JAEGER_ADDR
+          value: http://jaeger-collector.jaeger:14268/api/traces
+        ports:
+        - name: http
+          containerPort: 8002

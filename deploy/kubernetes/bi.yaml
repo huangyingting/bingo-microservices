@@ -1,0 +1,55 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: bi
+  labels:
+    app: bi
+spec:
+  ports:
+  - name: http
+    port: 8001
+    targetPort: 8001
+  selector:
+    app: bi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bi
+  labels:
+    app: bi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bi
+  template:
+    metadata:
+      labels:
+        app: bi
+    spec:
+      containers:
+      - name: be
+        image: ghcr.io/huangyingting/bi:latest
+        env:
+        - name: BI_JAEGER_ADDR
+          value: http://jaeger-collector.jaeger:14268/api/traces
+        - name: BI_DB_DRIVER
+          value: mysql
+        - name: BI_DB_HOST
+          value: mysql.mysql
+        - name: BI_DB_PORT
+          value: "3306"
+        - name: BI_DB_DATABASE
+          value: bingo
+        - name: BI_DB_USERNAME
+          value: bingo
+        - name: BI_DB_PASSWORD
+          value: P@ssw0rd
+        - name: BI_AMQP_URI
+          value: amqp://user:d2EhB1p9K4@rabbitmq.rabbitmq:5672/
+        - name: BI_REMOTE_BG_HTTP_ADDR
+          value: bg:8000
+        ports:
+        - name: http
+          containerPort: 8002

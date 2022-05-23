@@ -1,0 +1,17 @@
+apiVersion: jaegertracing.io/v1
+kind: Jaeger
+metadata:
+  name: jaeger
+spec:
+  strategy: allInOne
+  ingress:
+    enabled: true
+    annotations:
+      kubernetes.io/ingress.class: nginx
+      cert-manager.io/cluster-issuer: letsencrypt
+    hosts:
+      - jaeger.aliases.biz
+    tls:
+      - hosts:
+          - jaeger.aliases.biz
+        secretName: jaeger-tls

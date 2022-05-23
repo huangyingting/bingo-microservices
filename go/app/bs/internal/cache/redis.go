@@ -3,6 +3,7 @@ package cache
 import (
 	"context"
 	"fmt"
+	"net/url"
 	"time"
 
 	"bingo/app/bs/internal/conf"
@@ -21,8 +22,17 @@ func NewRedis(c *conf.Cache, h *log.Helper) (*Redis, error) {
 	var rdb *redis.Client = nil
 	if c.Addr != "" {
 		h.Debugf("redis addr: %s", c.Addr)
+
+		redisUrl, err := url.Parse(c.Addr)
+		if err != nil {
+			h.Errorf("incorrect redis address: %v", err)
+			return nil, err
+		}
+		redisPassword, _ := redisUrl.User.Password()
 		rdb = redis.NewClient(&redis.Options{
-			Addr: c.Addr,
+			Addr:     redisUrl.Host,
+			Username: redisUrl.User.Username(),
+			Password: redisPassword,
 		})
 		if rdb.Ping(context.Background()).Err() == nil {
 			return &Redis{rdb: rdb, ttl: c.CacheTtl, h: h}, nil

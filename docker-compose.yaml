@@ -108,11 +108,11 @@ services:
       - BS_DB_PASSWORD=P@ssw0rd
       - BS_ETCD_ADDR=etcd:2379
       - BS_ES_ADDR=http://es:9200
-      - BS_REDIS_ADDR=redis:6379
+      - BS_REDIS_ADDR=redis://redis:6379
       - BS_AMQP_URI=amqp://rabbitmq:5672/
       - BS_REMOTE_BI_HTTP_ADDR=bi:8001
       - BS_REMOTE_BE_HTTP_ADDR=be:8002
-      - REMOTE_GO_WITNESS_ADDR=http://localhost:7171
+      - BS_REMOTE_GO_WITNESS_ADDR=http://localhost:7171
       - BS_JAEGER_ADDR=http://jaeger:14268/api/traces
     depends_on:
       mysql:
