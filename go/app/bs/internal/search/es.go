@@ -63,7 +63,11 @@ type ElasticSearch struct {
 }
 
 func NewElasticSearch(c *conf.Search, h *log.Helper) (*ElasticSearch, error) {
-	es, err := elastic.NewClient(elastic.SetURL(c.Addr...), elastic.SetSniff(c.Sniff))
+	es, err := elastic.NewClient(
+		elastic.SetURL(c.Addr...),
+		elastic.SetBasicAuth(c.Username, c.Password),
+		elastic.SetSniff(c.Sniff),
+	)
 	if err != nil {
 		h.Errorf("connect to elasticsearch error: %v", err)
 		return nil, err

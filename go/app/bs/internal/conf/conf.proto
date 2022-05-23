@@ -61,6 +61,8 @@ message Search {
   bool sniff = 3;
   uint32 number_of_shards = 4;
   uint32 number_of_replicas = 5;
+  string username = 6;
+  string password = 7;
 }
 
 message Cache {

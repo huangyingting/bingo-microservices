@@ -26,6 +26,8 @@ search:
   sniff: false
   number_of_shards: 1
   number_of_replicas: 0
+  username: "${ES_USERNAME:}"
+  password: "${ES_PASSWORD:}"
 cache:
   addr: "${REDIS_ADDR:redis://localhost:6379}"
   cache_ttl: 3600
