@@ -15,7 +15,7 @@ var WS_DEBUG_TEMPLATE = template.Must(template.New("WsDebug").Parse(`
 		(function() {
 			var data = document.getElementById("output");
       var schema = window.location.protocol === "https:" ? "wss://": "ws://"
-			var c = new WebSocket(schema+{{.Host}}/ws");
+			var c = new WebSocket(schema+"{{.Host}}/ws");
 			c.onclose = function(msg) {
 					data.append((new Date().toUTCString())+" <== Connection closed")
 			}
