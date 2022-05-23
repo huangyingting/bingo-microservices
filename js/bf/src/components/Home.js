@@ -4,7 +4,7 @@ import { HeroHeader, Paragraph } from './Styled';
 const Home = () => {
   return (
     <>
-      <HeroHeader color="#e1f4fd" title="Cloud Architecture Design" 
+      <HeroHeader color="#e1f4fd" title="Cloud Native Architecture Design" 
         subTitle="Empowering people in digital transformation"
         content="Reinvent business in the cloud.Cloud transformation processes help organizations move their information to cloud environments. This process can be scaled according to business needs."
         image="/images/company.svg"
