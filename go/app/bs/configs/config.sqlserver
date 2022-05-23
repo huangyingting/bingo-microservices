@@ -20,6 +20,8 @@ alias:
   bit_len_sequence: 7
   bit_len_machine_id: 5
   etcd_addr: ["${ETCD_ADDR:localhost:2379}"]
+  etcd_username: "${ETCD_USERNAME:}"
+  etcd_password: "${ETCD_PASSWORD:}"
 search:
   addr: ["${ES_ADDR:http://localhost:9200}"]
   index_name: short_url

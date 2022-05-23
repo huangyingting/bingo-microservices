@@ -30,7 +30,7 @@ spec:
     spec:
       containers:
       - name: bs
-        image: ghcr.io/huangyingting/bs:latest
+        image: ghcr.io/huangyingting/bs:master
         env:
         - name: BS_DB_DRIVER
           value: mysql
@@ -46,8 +46,16 @@ spec:
           value: P@ssw0rd
         - name: BS_ETCD_ADDR
           value: etcd.etcd:2379
+        - name: BS_ETCD_USERNAME
+          value: root
+        - name: BS_ETCD_PASSWORD
+          value: oWHm4kh8ks
         - name: BS_ES_ADDR
           value: http://es-es-http.es:9200
+        - name: BS_ES_USERNAME
+          value: elastic
+        - name: BS_ES_PASSWORD
+          value: qlH06Gb8i2ZtCY7lK05eF230
         - name: BS_REDIS_ADDR
           value: redis://:pXLNZgvIB8@redis-master.redis:6379
         - name: BS_AMQP_URI

@@ -185,7 +185,7 @@ func (es *ElasticSearch) SearchAnd(oid string, tags []string) ([]Alias, error) {
 }
 
 func (es *ElasticSearch) Suggest(text string) ([]string, error) {
-	es.h.Debug("suggest: %s", text)
+	es.h.Debugf("suggest: %s", text)
 	suggester := elastic.NewCompletionSuggester("tags-suggest").
 		Text(text).Field("tags.suggest").SkipDuplicates(true).Size(5)
 	searchSource := elastic.NewSearchSource().
@@ -208,7 +208,7 @@ func (es *ElasticSearch) Suggest(text string) ([]string, error) {
 			results = append(results, option.Text)
 		}
 	}
-	es.h.Debug("suggest results: %v", results)
+	es.h.Debugf("suggest results: %v", results)
 	return results, nil
 }
 

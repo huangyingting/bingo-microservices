@@ -53,6 +53,8 @@ message Alias {
   uint32 bit_len_sequence = 3;
   uint32 bit_len_machine_id = 4;
   repeated string etcd_addr = 5;
+  string etcd_username = 6;
+  string etcd_password = 7;
 }
 
 message Search {

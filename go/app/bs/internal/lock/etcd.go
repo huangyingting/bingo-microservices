@@ -20,13 +20,20 @@ type EtcdDistributedLock struct {
 	h       *log.Helper
 }
 
-func NewEtcdDistributedLock(addr []string, h *log.Helper) (*EtcdDistributedLock, error) {
+func NewEtcdDistributedLock(
+	addr []string,
+	username string,
+	password string,
+	h *log.Helper,
+) (*EtcdDistributedLock, error) {
 	if len(addr) == 0 {
 		return nil, ErrInvalidEtcdAddresses
 	}
 	cli, err := clientv3.New(
 		clientv3.Config{
 			Endpoints:   addr,
+			Username:    username,
+			Password:    password,
 			DialOptions: []grpc.DialOption{grpc.WithBlock()},
 			DialTimeout: 5 * time.Second})
 
