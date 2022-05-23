@@ -122,10 +122,9 @@ var CAPTCHA_TEMPLATE = template.Must(template.New("Captcha").Parse(`
       }).catch((response) => {
         title.innerText = "Failed to redirect";
         loading.style.display = "none";
-        console.log(response.status, response.statusText);
-        response.json().then((json) => {
-          console.log(json);
-          error.innerText = json.error;
+        response.json().then((e) => {
+          console.log(e);
+          error.innerText = e.message;
         })
       })
     })
