@@ -1,0 +1,302 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: gowitness
+  labels:
+    app: gowitness
+spec:
+  ports:
+  - name: http
+    port: 7171
+    targetPort: 7171
+  selector:
+    app: gowitness
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gowitness
+  labels:
+    app: gowitness
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gowitness
+  template:
+    metadata:
+      labels:
+        app: gowitness
+    spec:
+      containers:
+      - name: gowitness
+        image: huangyingting/gowitness:latest
+        command: ["gowitness"]
+        args: ["server", "--address", "0.0.0.0:7171", "-X", "800", "-Y", "600"]
+        ports:
+        - name: http
+          containerPort: 7171
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    kubernetes.io/ingress.class: nginx
+  labels:
+    app: gowitness
+  name: gowitness
+spec:
+  rules:
+  - host: gowitness.aliases.biz
+    http:
+      paths:
+      - backend:
+          service:
+            name: gowitness
+            port:
+              number: 7171
+        path: /
+        pathType: ImplementationSpecific
+  tls:
+  - hosts:
+    - gowitness.aliases.biz
+    secretName: gowitness-tls
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: be
+  labels:
+    app: be
+spec:
+  ports:
+  - name: http
+    port: 8002
+    targetPort: 8002
+  selector:
+    app: be
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: be
+  labels:
+    app: be
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: be
+  template:
+    metadata:
+      labels:
+        app: be
+    spec:
+      containers:
+      - name: be
+        image: ghcr.io/huangyingting/be:latest
+        imagePullPolicy: Always
+        env:
+        - name: BE_JAEGER_ADDR
+          value: http://jaeger-collector.jaeger.svc.cluster.local:14268/api/traces
+        ports:
+        - name: http
+          containerPort: 8002
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bg
+  labels:
+    app: bg
+spec:
+  ports:
+  - name: http
+    port: 8000
+    targetPort: 8000
+  selector:
+    app: bg
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bg
+  labels:
+    app: bg
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bg
+  template:
+    metadata:
+      labels:
+        app: bg
+    spec:
+      containers:
+      - name: bg
+        image: ghcr.io/huangyingting/bg:latest
+        imagePullPolicy: Always
+        env:
+        - name: BG_JAEGER_ADDR
+          value: http://jaeger-collector.jaeger.svc.cluster.local:14268/api/traces
+        ports:
+        - name: http
+          containerPort: 8000         
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bi
+  labels:
+    app: bi
+spec:
+  ports:
+  - name: http
+    port: 8001
+    targetPort: 8001
+  selector:
+    app: bi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bi
+  labels:
+    app: bi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bi
+  template:
+    metadata:
+      labels:
+        app: bi
+    spec:
+      containers:
+      - name: be
+        image: ghcr.io/huangyingting/bi:latest
+        imagePullPolicy: Always
+        env:
+        - name: BI_JAEGER_ADDR
+          value: http://jaeger-collector.jaeger.svc.cluster.local:14268/api/traces
+        - name: BI_DB_DRIVER
+          value: mysql
+        - name: BI_DB_HOST
+          value: mysql.mysql
+        - name: BI_DB_PORT
+          value: "3306"
+        - name: BI_DB_DATABASE
+          value: bingo
+        - name: BI_DB_USERNAME
+          value: bingo
+        - name: BI_DB_PASSWORD
+          value: P@ssw0rd
+        - name: BI_AMQP_URI
+          value: amqp://user:d2EhB1p9K4@rabbitmq.rabbitmq.svc.cluster.local:5672/
+        - name: BI_REMOTE_BG_HTTP_ADDR
+          value: bg:8000
+        ports:
+        - name: http
+          containerPort: 8002
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bs
+  labels:
+    app: bs
+spec:
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 8080
+  selector:
+    app: bs
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bs
+  labels:
+    app: bs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bs
+  template:
+    metadata:
+      labels:
+        app: bs
+    spec:
+      containers:
+      - name: bs
+        image: ghcr.io/huangyingting/bs:latest
+        imagePullPolicy: Always
+        env:
+        - name: BS_DB_DRIVER
+          value: mysql
+        - name: BS_DB_HOST
+          value: mysql.mysql
+        - name: BS_DB_PORT
+          value: "3306"
+        - name: BS_DB_DATABASE
+          value: bingo
+        - name: BS_DB_USERNAME
+          value: bingo
+        - name: BS_DB_PASSWORD
+          value: P@ssw0rd
+        - name: BS_ETCD_ADDR
+          value: etcd.etcd.svc.cluster.local:2379
+        - name: BS_ETCD_USERNAME
+          value: root
+        - name: BS_ETCD_PASSWORD
+          value: oWHm4kh8ks
+        - name: BS_ES_ADDR
+          value: http://es-es-http.es.svc.cluster.local:9200
+        - name: BS_ES_USERNAME
+          value: elastic
+        - name: BS_ES_PASSWORD
+          value: qlH06Gb8i2ZtCY7lK05eF230
+        - name: BS_REDIS_ADDR
+          value: redis://:pXLNZgvIB8@redis-master.redis.svc.cluster.local:6379
+        - name: BS_AMQP_URI
+          value: amqp://user:d2EhB1p9K4@rabbitmq.rabbitmq.svc.cluster.local:5672/
+        - name: BS_REMOTE_BI_HTTP_ADDR
+          value: bi:8001
+        - name: BS_REMOTE_BE_HTTP_ADDR
+          value: be:8002
+        - name: BS_REMOTE_GO_WITNESS_ADDR
+          value: https://gowitness.aliases.biz
+        - name: BS_JAEGER_ADDR
+          value: http://jaeger-collector.jaeger.svc.cluster.local:14268/api/traces
+        ports:
+        - name: http
+          containerPort: 8080
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt
+  name: bs
+spec:
+  rules:
+  - host: aliases.biz
+    http:
+      paths:
+      - backend:
+          service:
+            name: bs
+            port:
+              number: 8080
+        pathType: Prefix
+        path: /
+  tls:
+  - hosts:
+    - aliases.biz
+    secretName: bs-tls

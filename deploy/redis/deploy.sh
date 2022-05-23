@@ -1,3 +1,4 @@
+kubectl create ns redis
 helm install redis bitnami/redis \
      --set image.registry=ghcr.io \
      --set image.repository=huangyingting/redis \

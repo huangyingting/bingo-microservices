@@ -29,6 +29,7 @@ func NewEtcdDistributedLock(
 	if len(addr) == 0 {
 		return nil, ErrInvalidEtcdAddresses
 	}
+	h.Debugf("etcd addr: %v username: %s password: %s", addr, username, password)
 	cli, err := clientv3.New(
 		clientv3.Config{
 			Endpoints:   addr,
