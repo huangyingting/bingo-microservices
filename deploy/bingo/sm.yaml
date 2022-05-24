@@ -1,0 +1,71 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: bs
+  namespace: bingo
+  labels:
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: bs
+  endpoints:
+  - port: http
+    path: /metrics
+  namespaceSelector:
+    matchNames:
+    - bingo
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: bi
+  namespace: bingo
+  labels:
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: bi
+  endpoints:
+  - port: http
+    path: /metrics
+  namespaceSelector:
+    matchNames:
+    - bingo
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: be
+  namespace: bingo
+  labels:
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: be
+  endpoints:
+  - port: http
+    path: /metrics
+  namespaceSelector:
+    matchNames:
+    - bingo
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: bg
+  namespace: bingo
+  labels:
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: bg
+  endpoints:
+  - port: http
+    path: /metrics
+  namespaceSelector:
+    matchNames:
+    - bingo

@@ -190,6 +190,7 @@ func main() {
 
 	p := ginprom.New(
 		ginprom.Engine(r),
+		ginprom.Namespace("bingo"),
 		ginprom.Subsystem("bs"),
 		ginprom.Path("/metrics"),
 	)

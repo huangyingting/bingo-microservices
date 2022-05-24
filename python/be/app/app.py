@@ -27,7 +27,7 @@ span_processor = BatchSpanProcessor(jaeger_exporter)
 trace.get_tracer_provider().add_span_processor(span_processor)
 
 app = Flask(__name__)
-metrics = GunicornInternalPrometheusMetrics(app)
+metrics = GunicornInternalPrometheusMetrics(app, defaults_prefix="bingo_be")
 FlaskInstrumentor().instrument_app(app)
 RequestsInstrumentor().instrument()
 
@@ -51,6 +51,7 @@ def extract_html():
     }
 
     return jsonify(response), 200
+
 
 metrics.register_default(
     metrics.counter(
