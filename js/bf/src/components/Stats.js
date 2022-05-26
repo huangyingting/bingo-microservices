@@ -246,28 +246,29 @@ const Stats = () => {
           </Card>
         </Col>
       </Row>
-
       <Row className="mt-4">
         <Col>
           <Card className='shadow'>
-            <Card.Header className="text-center text-primary"><h6>SYSTEM</h6></Card.Header>
+            <Card.Header className="text-center text-primary"><h6>SYSTEM{stats?.environment ? "("+stats?.hostname+")" : ""}</h6></Card.Header>
             <Card.Body>
               <Row>
-                <Col className='col-2 align-self-center'>
-                  <h6>{stats?.platform ? stats?.platform : "N/A"}-{stats?.platform_version ? stats?.platform_version : "N/A"}</h6><Card.Text><small>Platform</small></Card.Text>
-                  <h6>{stats?.os ? stats?.os : "N/A"}</h6><Card.Text><small>OS</small></Card.Text>
+                <Col className='col-12 col-md-4 align-self-center'>
+                  <h6>Platform: {stats?.platform ? stats?.platform : "N/A"}-{stats?.platform_version ? stats?.platform_version : "N/A"}</h6>
+                  <h6>OS: {stats?.os ? stats?.os : "N/A"}</h6>
+                  <h6>Hostname: {stats?.hostname ? stats?.hostname : "N/A"}</h6>
+                  <h6>Uptime: {realTimeStats?.uptime ? formatUptime(realTimeStats?.uptime) : "N/A"}</h6>
                 </Col>
-                <Col className='col-4'>
-                  <h6>{stats?.hostname ? stats?.hostname : "N/A"}</h6><Card.Text><small>Hostname</small></Card.Text>
-                  <h6>{realTimeStats?.uptime ? formatUptime(realTimeStats?.uptime) : "N/A"}</h6><Card.Text><small>Uptime</small></Card.Text>
+                <Col className='col-12 col-md-4 align-self-center'>
+                  <h6>Go Version: {stats?.go_version ? stats?.go_version : "N/A"}</h6>
+                  <h6>Arch: {stats?.go_arch ? stats?.go_arch : "N/A"}</h6>
+                  <h6>Docker: {stats?.is_docker ? "Yes" : "No"}</h6>
+                  <h6>Kubernetes: {stats?.is_kubernetes ? "Yes" : "No"}</h6>
                 </Col>
-                <Col className='col-3'>
-                  <h6>{stats?.go_version ? stats?.go_version : "N/A"}</h6><Card.Text><small>Go Version</small></Card.Text>
-                  <h6>{stats?.go_arch ? stats?.go_arch : "N/A"}</h6><Card.Text><small>Arch</small></Card.Text>
-                </Col>
-                <Col className='col-3'>
-                  <h6>{stats?.is_docker ? "Yes" : "No"}</h6><Card.Text><small>Docker</small></Card.Text>
-                  <h6>{stats?.is_kubernetes ? "Yes" : "No"}</h6><Card.Text><small>Kubernetes</small></Card.Text>
+                <Col className='col-12 col-md-4 align-self-center'>
+                  <h6>Location: {stats?.location ? stats?.location : "N/A"}</h6>
+                  <h6>Zone: {stats?.zone ? stats?.zone : "N/A"}</h6>
+                  <h6>Name: {stats?.name ? stats?.name : "N/A"}</h6>
+                  <h6>Size: {stats?.size ? stats?.size : "N/A"}</h6>
                 </Col>
               </Row>
             </Card.Body>

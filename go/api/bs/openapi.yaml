@@ -374,6 +374,16 @@ components:
                     type: boolean
                 isKubernetes:
                     type: boolean
+                environment:
+                    type: string
+                location:
+                    type: string
+                zone:
+                    type: string
+                name:
+                    type: string
+                size:
+                    type: string
         Status:
             type: object
             properties:

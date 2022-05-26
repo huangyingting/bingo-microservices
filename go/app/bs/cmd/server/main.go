@@ -352,7 +352,7 @@ func main() {
 
 	// handle system statistic request
 	v1.GET("/system/stats", func(ctx *gin.Context) {
-		response, err := system.GetStats()
+		response, err := system.GetStats(ctx.Request.Context())
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, bsv1.ErrorInternalServerError(err.Error()))
 			return

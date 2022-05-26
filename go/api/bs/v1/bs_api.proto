@@ -175,6 +175,11 @@ message StatsResponse {
   string external_ip = 13;
   bool is_docker = 14;
   bool is_kubernetes = 15;
+  string environment = 16;
+  string location = 17;
+  string zone = 18;
+  string name = 19;
+  string size = 20;
 }
 
 message MemLoadRequest {

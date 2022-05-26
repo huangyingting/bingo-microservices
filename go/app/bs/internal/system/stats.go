@@ -1,11 +1,13 @@
 package system
 
 import (
+	"context"
 	"os"
 	"runtime"
 	"strings"
 
 	bsv1 "bingo/api/bs/v1"
+	"bingo/pkg/imds"
 
 	"bingo/app/bs/internal/utils"
 
@@ -24,7 +26,7 @@ func FileExists(filename string) bool {
 }
 
 // GetStats get system statistic
-func GetStats() (*bsv1.StatsResponse, error) {
+func GetStats(ctx context.Context) (*bsv1.StatsResponse, error) {
 	host, err := host.Info()
 	if err != nil {
 		return nil, err
@@ -58,7 +60,7 @@ func GetStats() (*bsv1.StatsResponse, error) {
 
 	// potential fix, read /proc/self/cgroup to tell if running from containerd
 	// by looking at 0::/system.slice/containerd.service
-	return &bsv1.StatsResponse{
+	response := &bsv1.StatsResponse{
 		Hostname:        host.Hostname,
 		Os:              host.OS,
 		Platform:        host.Platform,
@@ -74,5 +76,16 @@ func GetStats() (*bsv1.StatsResponse, error) {
 		LocalIp:         local_ip,
 		IsDocker:        FileExists("/.dockerenv"),
 		IsKubernetes:    FileExists("/var/run/secrets/kubernetes.io"),
-	}, nil
+	}
+
+	// get cloud instance metadata
+	ai, _ := imds.GetAzureInstance(ctx)
+	if ai != nil {
+		response.Environment = ai.Compute.AzEnvironment
+		response.Location = ai.Compute.Location
+		response.Zone = ai.Compute.Zone
+		response.Name = ai.Compute.Name
+		response.Size = ai.Compute.VMSize
+	}
+	return response, nil
 }
