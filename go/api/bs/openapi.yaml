@@ -370,7 +370,7 @@ components:
                     type: string
                 externalIp:
                     type: string
-                isContainer:
+                isDocker:
                     type: boolean
                 isKubernetes:
                     type: boolean

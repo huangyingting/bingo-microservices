@@ -266,8 +266,8 @@ const Stats = () => {
                   <h6>{stats?.go_arch ? stats?.go_arch : "N/A"}</h6><Card.Text><small>Arch</small></Card.Text>
                 </Col>
                 <Col className='col-3'>
-                  <h6>{stats?.is_container ? "Yes" : "No"}</h6><Card.Text><small>Containerized</small></Card.Text>
-                  <h6>{stats?.is_kubernetes ? "Yes" : "No"}</h6><Card.Text><small>In Kubernetes</small></Card.Text>
+                  <h6>{stats?.is_docker ? "Yes" : "No"}</h6><Card.Text><small>Docker</small></Card.Text>
+                  <h6>{stats?.is_kubernetes ? "Yes" : "No"}</h6><Card.Text><small>Kubernetes</small></Card.Text>
                 </Col>
               </Row>
             </Card.Body>

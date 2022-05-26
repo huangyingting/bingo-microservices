@@ -56,6 +56,8 @@ func GetStats() (*bsv1.StatsResponse, error) {
 		external_ip, _ = utils.GetExternalIP(utils.CloudflareDns)
 	}
 
+	// potential fix, read /proc/self/cgroup to tell if running from containerd
+	// by looking at 0::/system.slice/containerd.service
 	return &bsv1.StatsResponse{
 		Hostname:        host.Hostname,
 		Os:              host.OS,
@@ -70,7 +72,7 @@ func GetStats() (*bsv1.StatsResponse, error) {
 		MemTotal:        mem.Total,
 		ExternalIp:      external_ip,
 		LocalIp:         local_ip,
-		IsContainer:     FileExists("/.dockerenv"),
+		IsDocker:        FileExists("/.dockerenv"),
 		IsKubernetes:    FileExists("/var/run/secrets/kubernetes.io"),
 	}, nil
 }

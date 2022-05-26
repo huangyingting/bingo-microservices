@@ -173,7 +173,7 @@ message StatsResponse {
   uint64 mem_total = 11;
   string local_ip = 12;
   string external_ip = 13;
-  bool is_container = 14;
+  bool is_docker = 14;
   bool is_kubernetes = 15;
 }
 
