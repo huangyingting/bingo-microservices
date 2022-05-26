@@ -249,7 +249,7 @@ const Stats = () => {
       <Row className="mt-4">
         <Col>
           <Card className='shadow'>
-            <Card.Header className="text-center text-primary"><h6>SYSTEM{stats?.environment ? "("+stats?.hostname+")" : ""}</h6></Card.Header>
+            <Card.Header className="text-center text-primary"><h6>SYSTEM{stats?.environment ? "("+stats?.environment+")" : ""}</h6></Card.Header>
             <Card.Body>
               <Row>
                 <Col className='col-12 col-md-4 align-self-center'>
