@@ -6,6 +6,8 @@ import (
 	"io/ioutil"
 	"net/http"
 	"time"
+
+	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 )
 
 type AzureInstance struct {
@@ -141,9 +143,13 @@ type AzureInstance struct {
 
 func GetAzureInstance(ctx context.Context) (*AzureInstance, error) {
 	var pt = &http.Transport{Proxy: nil}
-	client := http.Client{Transport: pt, Timeout: 1 * time.Second}
-	req, _ := http.NewRequest("GET", "http://169.254.169.254/metadata/instance", nil)
-	req = req.WithContext(ctx)
+	client := http.Client{Transport: otelhttp.NewTransport(pt), Timeout: 1 * time.Second}
+	req, _ := http.NewRequestWithContext(
+		ctx,
+		"GET",
+		"http://169.254.169.254/metadata/instance",
+		nil,
+	)
 	req.Header.Add("Metadata", "True")
 	q := req.URL.Query()
 	q.Add("format", "json")

@@ -6,6 +6,8 @@ import (
 	"io/ioutil"
 	"net/http"
 	"time"
+
+	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 )
 
 type GcpInstance struct {
@@ -61,19 +63,18 @@ type GcpInstance struct {
 
 func GetGcpInstance(ctx context.Context) (*GcpInstance, error) {
 	var pt = &http.Transport{Proxy: nil}
-	client := http.Client{Transport: pt, Timeout: 1 * time.Second}
-	req, _ := http.NewRequest(
+	client := http.Client{Transport: otelhttp.NewTransport(pt), Timeout: 1 * time.Second}
+	req, _ := http.NewRequestWithContext(
+		ctx,
 		"GET",
 		"http://metadata/computeMetadata/v1/instance/?recursive=true",
 		nil,
 	)
-	req = req.WithContext(ctx)
 	req.Header.Add("Metadata-Flavor", "Google")
 	resp, err := client.Do(req)
 	if err != nil {
 		return nil, err
 	}
-
 	defer resp.Body.Close()
 	body, _ := ioutil.ReadAll(resp.Body)
 	gi := GcpInstance{}

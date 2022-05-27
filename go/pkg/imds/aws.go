@@ -6,6 +6,8 @@ import (
 	"io/ioutil"
 	"net/http"
 	"time"
+
+	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 )
 
 type AwsInstance struct {
@@ -28,13 +30,13 @@ type AwsInstance struct {
 
 func GetAwsInstance(ctx context.Context) (*AwsInstance, error) {
 	var pt = &http.Transport{Proxy: nil}
-	client := http.Client{Transport: pt, Timeout: 1 * time.Second}
-	req, _ := http.NewRequest(
+	client := http.Client{Transport: otelhttp.NewTransport(pt), Timeout: 1 * time.Second}
+	req, _ := http.NewRequestWithContext(
+		ctx,
 		"GET",
 		"http://169.254.169.254/latest/dynamic/instance-identity/document",
 		nil,
 	)
-	req = req.WithContext(ctx)
 	resp, err := client.Do(req)
 	if err != nil {
 		return nil, err
