@@ -141,7 +141,7 @@ type AzureInstance struct {
 
 func GetAzureInstance(ctx context.Context) (*AzureInstance, error) {
 	var pt = &http.Transport{Proxy: nil}
-	client := http.Client{Transport: pt, Timeout: 2 * time.Second}
+	client := http.Client{Transport: pt, Timeout: 1 * time.Second}
 	req, _ := http.NewRequest("GET", "http://169.254.169.254/metadata/instance", nil)
 	req = req.WithContext(ctx)
 	req.Header.Add("Metadata", "True")
