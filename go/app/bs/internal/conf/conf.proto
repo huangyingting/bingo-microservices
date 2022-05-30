@@ -70,6 +70,11 @@ message Search {
 message Cache {
   string addr = 1;
   uint32 cache_ttl = 2;
+  string username = 3;
+  string password = 4;
+  bool sentinel_enabled = 5;
+  string sentinel_master_set = 6;
+  repeated string sentinel_addrs = 7;
 }
 
 message Recaptcha {

@@ -3,7 +3,6 @@ package cache
 import (
 	"context"
 	"fmt"
-	"net/url"
 	"time"
 
 	"bingo/app/bs/internal/conf"
@@ -13,37 +12,52 @@ import (
 )
 
 type Redis struct {
-	rdb *redis.Client
-	ttl uint32
-	h   *log.Helper
+	rc               *redis.Client
+	rcc              *redis.ClusterClient
+	sentinel_enabled bool
+	ttl              uint32
+	h                *log.Helper
 }
 
 func NewRedis(c *conf.Cache, h *log.Helper) (*Redis, error) {
-	var rdb *redis.Client = nil
-	if c.Addr != "" {
+	var rc *redis.Client = nil
+	if !c.SentinelEnabled && c.Addr != "" {
 		h.Debugf("redis addr: %s", c.Addr)
 
-		redisUrl, err := url.Parse(c.Addr)
-		if err != nil {
-			h.Errorf("incorrect redis address: %v", err)
-			return nil, err
-		}
-		redisPassword, _ := redisUrl.User.Password()
-		rdb = redis.NewClient(&redis.Options{
-			Addr:     redisUrl.Host,
-			Username: redisUrl.User.Username(),
-			Password: redisPassword,
+		rc = redis.NewClient(&redis.Options{
+			Addr:     c.Addr,
+			Username: c.Username,
+			Password: c.Password,
 		})
-		if rdb.Ping(context.Background()).Err() == nil {
-			return &Redis{rdb: rdb, ttl: c.CacheTtl, h: h}, nil
+		if rc.Ping(context.Background()).Err() == nil {
+			return &Redis{rc: rc, rcc: nil, sentinel_enabled: false, ttl: c.CacheTtl, h: h}, nil
 		}
 	}
+
+	if c.SentinelEnabled && len(c.SentinelAddrs) > 0 {
+		rcc := redis.NewFailoverClusterClient(&redis.FailoverOptions{
+			MasterName:    c.SentinelMasterSet,
+			SentinelAddrs: c.SentinelAddrs,
+			Username:      c.Username,
+			Password:      c.Password,
+			RouteRandomly: true,
+		})
+		if rcc.Ping(context.Background()).Err() == nil {
+			return &Redis{rc: nil, rcc: rcc, sentinel_enabled: true, ttl: c.CacheTtl, h: h}, nil
+		}
+	}
+
 	h.Errorf("incorrect address or redis isn't alive: %s", c.Addr)
 	return nil, fmt.Errorf("incorrect address or redis isn't alive: %s", c.Addr)
 }
 
 func (cs *Redis) Get(key string, val interface{}) error {
-	err := cs.rdb.Get(context.Background(), key).Scan(val)
+	var err error = nil
+	if cs.sentinel_enabled {
+		err = cs.rcc.Get(context.Background(), key).Scan(val)
+	} else {
+		err = cs.rc.Get(context.Background(), key).Scan(val)
+	}
 	if err != nil {
 		cs.h.Debugf("get error: %v", err)
 	}
@@ -51,7 +65,12 @@ func (cs *Redis) Get(key string, val interface{}) error {
 }
 
 func (cs *Redis) Set(key string, val interface{}) error {
-	err := cs.rdb.Set(context.Background(), key, val, time.Duration(cs.ttl)*time.Second).Err()
+	var err error = nil
+	if cs.sentinel_enabled {
+		err = cs.rcc.Set(context.Background(), key, val, time.Duration(cs.ttl)*time.Second).Err()
+	} else {
+		err = cs.rc.Set(context.Background(), key, val, time.Duration(cs.ttl)*time.Second).Err()
+	}
 	if err != nil {
 		cs.h.Debugf("set error: %v", err)
 	}
@@ -59,7 +78,12 @@ func (cs *Redis) Set(key string, val interface{}) error {
 }
 
 func (cs *Redis) Delete(key string) error {
-	err := cs.rdb.Del(context.Background(), key).Err()
+	var err error = nil
+	if cs.sentinel_enabled {
+		err = cs.rcc.Del(context.Background(), key).Err()
+	} else {
+		err = cs.rc.Del(context.Background(), key).Err()
+	}
 	if err != nil {
 		cs.h.Debugf("delete error: %v", err)
 	}
@@ -67,7 +91,13 @@ func (cs *Redis) Delete(key string) error {
 }
 
 func (cs *Redis) BFAdd(key string, val string) (bool, error) {
-	added, err := cs.rdb.Do(context.Background(), "BF.ADD", key, val).Bool()
+	var err error = nil
+	var added bool = false
+	if cs.sentinel_enabled {
+		added, err = cs.rcc.Do(context.Background(), "BF.ADD", key, val).Bool()
+	} else {
+		added, err = cs.rc.Do(context.Background(), "BF.ADD", key, val).Bool()
+	}
 	if err != nil {
 		cs.h.Debugf("bf.add error: %v", err)
 	}
@@ -75,7 +105,13 @@ func (cs *Redis) BFAdd(key string, val string) (bool, error) {
 }
 
 func (cs *Redis) BFExists(key string, val string) (bool, error) {
-	exists, err := cs.rdb.Do(context.Background(), "BF.EXISTS", key, val).Bool()
+	var err error = nil
+	var exists bool = false
+	if cs.sentinel_enabled {
+		exists, err = cs.rcc.Do(context.Background(), "BF.EXISTS", key, val).Bool()
+	} else {
+		exists, err = cs.rc.Do(context.Background(), "BF.EXISTS", key, val).Bool()
+	}
 	if err != nil {
 		cs.h.Debugf("bf.exists error: %v", err)
 	}

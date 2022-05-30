@@ -262,7 +262,17 @@ spec:
         - name: BS_ES_PASSWORD
           value: qlH06Gb8i2ZtCY7lK05eF230
         - name: BS_REDIS_ADDR
-          value: redis://:pXLNZgvIB8@redis-master.redis.svc.cluster.local:6379
+          value: redis.redis.svc.cluster.local:6379
+        - name: BS_REDIS_USERNAME
+          value: 
+        - name: BS_REDIS_PASSWORD
+          value: O5Q0c3tYXM
+        - name: BS_REDIS_SENTINEL_ENABLED
+          value: true
+        - name: BS_REDIS_SENTINEL_MASTER_SET
+          value: bingo
+        - name: BS_REDIS_SENTINEL_ADDRS
+          value: redis-node-0.redis-headless.redis.svc.cluster.local:26379,redis-node-1.redis-headless.redis.svc.cluster.local:26379,redis-node-2.redis-headless.redis.svc.cluster.local:26379
         - name: BS_AMQP_URI
           value: amqp://user:d2EhB1p9K4@rabbitmq.rabbitmq.svc.cluster.local:5672/
         - name: BS_REMOTE_BI_HTTP_ADDR

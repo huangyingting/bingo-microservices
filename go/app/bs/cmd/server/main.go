@@ -143,6 +143,7 @@ func main() {
 			env.NewSource("BS_"),
 			file.NewSource(flagconf),
 		),
+		config.WithResolver(conf.BsResolver),
 	)
 	defer c.Close()
 

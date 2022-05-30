@@ -32,6 +32,11 @@ search:
   password: "${ES_PASSWORD:}"
 cache:
   addr: "${REDIS_ADDR:redis://localhost:6379}"
+  username: "${REDIS_USERNAME:}"
+  password: "${REDIS_PASSWORD:}"
+  sentinel_enabled: "${REDIS_SENTINEL_ENABLED:false}"
+  sentinel_master_set: "${REDIS_SENTINEL_MASTER_SET:}"
+  sentinel_addrs: ["${REDIS_SENTINEL_ADDRS:}"]
   cache_ttl: 3600
 recaptcha:
   site_key: 6Lethl8fAAAAAMEhZak5YlwnJUetY1dLGsaDLMxK
