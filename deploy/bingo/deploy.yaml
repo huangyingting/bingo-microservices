@@ -170,7 +170,7 @@ spec:
         - name: BS_REDIS_USERNAME
           value: 
         - name: BS_REDIS_PASSWORD
-          value: O5Q0c3tYXM
+          value: LXCcjrlNc8
         - name: BS_REDIS_SENTINEL_ENABLED
           value: "true"
         - name: BS_REDIS_SENTINEL_MASTER_SET
