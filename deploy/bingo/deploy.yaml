@@ -144,7 +144,7 @@ spec:
         - name: BS_DB_DRIVER
           value: mysql
         - name: BS_DB_HOST
-          value: mysql.mysql
+          value: mysql-primary.mysql.svc.cluster.local
         - name: BS_DB_PORT
           value: "3306"
         - name: BS_DB_DATABASE
