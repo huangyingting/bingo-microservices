@@ -1,0 +1,49 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    kubernetes.io/ingress.class: nginx
+  labels:
+    app: gowitness
+  name: gowitness
+spec:
+  rules:
+  - host: gowitness.aliases.biz
+    http:
+      paths:
+      - backend:
+          service:
+            name: gowitness
+            port:
+              number: 7171
+        path: /
+        pathType: ImplementationSpecific
+  tls:
+  - hosts:
+    - gowitness.aliases.biz
+    secretName: gowitness-tls
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt
+  name: bs
+spec:
+  rules:
+  - host: aliases.biz
+    http:
+      paths:
+      - backend:
+          service:
+            name: bs
+            port:
+              number: 8080
+        pathType: Prefix
+        path: /
+  tls:
+  - hosts:
+    - aliases.biz
+    secretName: bs-tls

@@ -2,7 +2,6 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: bs
-  namespace: bingo
   labels:
     release: prometheus
 spec:
@@ -20,7 +19,6 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: bi
-  namespace: bingo
   labels:
     release: prometheus
 spec:
@@ -38,7 +36,6 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: be
-  namespace: bingo
   labels:
     release: prometheus
 spec:
@@ -56,7 +53,6 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: bg
-  namespace: bingo
   labels:
     release: prometheus
 spec:
