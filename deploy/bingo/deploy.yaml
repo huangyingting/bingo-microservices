@@ -138,7 +138,7 @@ spec:
     spec:
       containers:
       - name: bs
-        image: ghcr.io/huangyingting/bs:latest
+        image: ghcr.io/huangyingting/bs:master
         imagePullPolicy: Always
         env:
         - name: BS_DB_DRIVER
@@ -153,13 +153,13 @@ spec:
           value: bingo
         - name: BS_DB_PASSWORD
           value: P@ssw0rd
-        - name: BS_ETCD_ADDR
+        - name: BS_ETCD_ADDRS
           value: etcd.etcd.svc.cluster.local:2379
         - name: BS_ETCD_USERNAME
           value: root
         - name: BS_ETCD_PASSWORD
           value: oWHm4kh8ks
-        - name: BS_ES_ADDR
+        - name: BS_ES_ADDRS
           value: http://es-es-http.es.svc.cluster.local:9200
         - name: BS_ES_USERNAME
           value: elastic

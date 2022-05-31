@@ -117,7 +117,7 @@ func NewShortUrlService(c *conf.Bootstrap, h *log.Helper) (*ShortUrlService, err
 	}
 
 	// use elasticsearch for inverted search of tags
-	if c.Search.Addr != nil {
+	if c.Search.Addrs != nil {
 		if _search, err = search.NewElasticSearch(
 			c.Search, h); err != nil {
 			h.Debugf("no elasticsearch available: %v", err)

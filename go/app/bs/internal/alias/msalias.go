@@ -63,7 +63,7 @@ func NewMsAlias(c *conf.Alias, h *log.Helper) (*MsAlias, error) {
 	alias.c = c
 	alias.h = h
 	alias.l = nil
-	if l, _ := lock.NewEtcdDistributedLock(c.EtcdAddr, c.EtcdUsername, c.EtcdPassword, h); l != nil {
+	if l, _ := lock.NewEtcdDistributedLock(c.EtcdAddrs, c.EtcdUsername, c.EtcdPassword, h); l != nil {
 		alias.l = l
 	}
 

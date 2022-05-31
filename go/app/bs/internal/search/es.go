@@ -64,7 +64,7 @@ type ElasticSearch struct {
 
 func NewElasticSearch(c *conf.Search, h *log.Helper) (*ElasticSearch, error) {
 	es, err := elastic.NewClient(
-		elastic.SetURL(c.Addr...),
+		elastic.SetURL(c.Addrs...),
 		elastic.SetBasicAuth(c.Username, c.Password),
 		elastic.SetSniff(c.Sniff),
 	)

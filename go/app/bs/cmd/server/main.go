@@ -156,6 +156,24 @@ func main() {
 		panic(err)
 	}
 
+	var sentinel_addrs []string
+	for _, e := range bc.Cache.SentinelAddrs {
+		sentinel_addrs = append(sentinel_addrs, strings.Split(e, ",")...)
+	}
+	bc.Cache.SentinelAddrs = sentinel_addrs
+
+	var es_addrs []string
+	for _, e := range bc.Search.Addrs {
+		es_addrs = append(es_addrs, strings.Split(e, ",")...)
+	}
+	bc.Search.Addrs = es_addrs
+
+	var etcd_addrs []string
+	for _, e := range bc.Alias.EtcdAddrs {
+		etcd_addrs = append(etcd_addrs, strings.Split(e, ",")...)
+	}
+	bc.Alias.EtcdAddrs = etcd_addrs
+
 	h.Debugf("dump config: %v", &bc)
 
 	if err := initTracer(bc.Jaeger.Addr); err != nil {

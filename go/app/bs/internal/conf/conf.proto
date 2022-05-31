@@ -52,13 +52,13 @@ message Alias {
   uint32 bit_len_time = 2;
   uint32 bit_len_sequence = 3;
   uint32 bit_len_machine_id = 4;
-  repeated string etcd_addr = 5;
+  repeated string etcd_addrs = 5;
   string etcd_username = 6;
   string etcd_password = 7;
 }
 
 message Search {
-  repeated string addr = 1;
+  repeated string addrs = 1;
   string index_name = 2;
   bool sniff = 3;
   uint32 number_of_shards = 4;
