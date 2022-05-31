@@ -75,6 +75,8 @@ message Cache {
   bool sentinel_enabled = 5;
   string sentinel_master_set = 6;
   repeated string sentinel_addrs = 7;
+  string sentinel_username = 8;
+  string sentinel_password = 9;
 }
 
 message Recaptcha {

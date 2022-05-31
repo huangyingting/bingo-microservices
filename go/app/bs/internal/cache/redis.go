@@ -36,11 +36,13 @@ func NewRedis(c *conf.Cache, h *log.Helper) (*Redis, error) {
 
 	if c.SentinelEnabled && len(c.SentinelAddrs) > 0 {
 		rcc := redis.NewFailoverClusterClient(&redis.FailoverOptions{
-			MasterName:    c.SentinelMasterSet,
-			SentinelAddrs: c.SentinelAddrs,
-			Username:      c.Username,
-			Password:      c.Password,
-			RouteRandomly: true,
+			MasterName:       c.SentinelMasterSet,
+			SentinelAddrs:    c.SentinelAddrs,
+			SentinelUsername: c.SentinelUsername,
+			SentinelPassword: c.SentinelPassword,
+			Username:         c.Username,
+			Password:         c.Password,
+			RouteRandomly:    true,
 		})
 		if rcc.Ping(context.Background()).Err() == nil {
 			return &Redis{rc: nil, rcc: rcc, sentinel_enabled: true, ttl: c.CacheTtl, h: h}, nil

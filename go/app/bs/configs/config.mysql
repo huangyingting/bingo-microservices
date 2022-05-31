@@ -37,6 +37,8 @@ cache:
   sentinel_enabled: "${REDIS_SENTINEL_ENABLED:false}"
   sentinel_master_set: "${REDIS_SENTINEL_MASTER_SET:}"
   sentinel_addrs: ["${REDIS_SENTINEL_ADDRS:}"]
+  sentinel_username: "${REDIS_USERNAME:}"
+  sentinel_password: "${REDIS_PASSWORD:}"
   cache_ttl: 3600
 recaptcha:
   site_key: 6Lethl8fAAAAAMEhZak5YlwnJUetY1dLGsaDLMxK
