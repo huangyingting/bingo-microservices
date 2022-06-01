@@ -1,5 +1,5 @@
 kubectl create ns etcd
-helm install etcd azure-marketplace/etcd -n etcd \
+helm install etcd bitnami/etcd -n etcd \
      --set metrics.enabled=true
 
 cat <<EOF | kubectl apply -f -
