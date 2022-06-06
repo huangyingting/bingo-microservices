@@ -68,3 +68,13 @@ References
     make up
     ```
 5. Visit URL http://localhost:8080 to login with your AAD user account.
+
+### Github CI/CD
+Bingo is integrated with Github Action, two workflows are included
+- Build & publish docker images to github container registry
+- CodeQL to scan and discover vulnerabilities across go, javascript and python scripts
+
+### Kubernetes deployment
+Bingo supports kubernetes deployment, a full set of deployment includes mysql, redis, rabbitmq and etcd(helm charts from bitnami), elasticsearch (operator from elasticsearch), nginx ingress controller, cert-manager as well prometheus(prometheus-community/prometheus).
+
+Those scripts and deployment files are included in deploy folder, deploy/bingo has all bingo deployment yaml files.
