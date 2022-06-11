@@ -103,7 +103,7 @@ spec:
         - name: BI_DB_DRIVER
           value: mysql
         - name: BI_DB_HOST
-          value: mysql.mysql
+          value: mysql-primary.mysql.svc.cluster.local
         - name: BI_DB_PORT
           value: "3306"
         - name: BI_DB_DATABASE
