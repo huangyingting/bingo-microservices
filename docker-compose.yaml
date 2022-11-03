@@ -1,0 +1,131 @@
+version: '3'
+services:
+  mysql:
+    image: mysql:5.7
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10    
+    environment:
+      - MYSQL_ROOT_PASSWORD=microservices
+      - MYSQL_USER=bingo
+      - MYSQL_PASSWORD=microservices
+      - MYSQL_DATABASE=bingo
+    ports:
+      - 3306:3306
+  jaeger:
+    image: jaegertracing/all-in-one:1.39
+    ports:
+      - 16686:16686
+      - 14268:14268
+  etcd:
+    image: bitnami/etcd:3.5
+    environment:
+      - ALLOW_NONE_AUTHENTICATION=yes
+    ports:
+      - 2379:2379
+  redis:
+    image: redislabs/rebloom:2.4.2
+    ports:
+      - 6379:6379
+  es:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.7
+    ports:
+      - 9200:9200
+      - 9300:9300
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+  rabbitmq:
+    image: rabbitmq:3.11-management-alpine
+    ports:
+      - 15672:15672
+      - 5672:5672
+    environment:
+      - RABBITMQ_DEFAULT_USER=
+      - RABBITMQ_DEFAULT_PASS=
+  gowitness:
+    image: huangyingting/gowitness
+    command: gowitness server --address 0.0.0.0:7171 -X 800 -Y 600   
+    ports:
+      - 7171:7171
+  bg:
+    image: huangyingting/bg
+    build: 
+      context: .
+      dockerfile: go/app/bg/Dockerfile
+    ports:
+      - 8000:8000
+      - 9000:9000
+    environment:
+      - BG_JAEGER_ADDR=http://jaeger:14268/api/traces      
+  bi:
+    image: huangyingting/bi
+    build: 
+      context: .
+      dockerfile: go/app/bi/Dockerfile
+    ports:
+      - 8001:8001
+      - 9001:9001
+    environment:
+      - BI_DB_DRIVER=mysql
+      - BI_DB_HOST=mysql
+      - BI_DB_PORT=3306
+      - BI_DB_DATABASE=bingo
+      - BI_DB_USERNAME=bingo
+      - BI_DB_PASSWORD=P@ssw0rd
+      - BI_AMQP_URI=amqp://rabbitmq:5672/
+      - BI_REMOTE_BG_HTTP_ADDR=bg:8000
+      - BI_JAEGER_ADDR=http://jaeger:14268/api/traces
+    depends_on:
+      mysql:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_started
+  be:
+    image: huangyingting/be
+    build: 
+      context: .
+      dockerfile: python/be/Dockerfile
+    ports:
+      - 8002:8002
+    environment:
+      - BE_JAEGER_ADDR=http://jaeger:14268/api/traces
+  bs:
+    image: huangyingting/bs
+    env_file:
+      - js/bf/.env.local
+      - go/app/bs/.env.local
+    build: 
+      context: .
+      dockerfile: go/app/bs/Dockerfile
+    ports:
+      - 8080:8080
+    environment:
+      - BS_DB_DRIVER=mysql
+      - BS_DB_HOST=mysql
+      - BS_DB_PORT=3306
+      - BS_DB_DATABASE=bingo
+      - BS_DB_USERNAME=bingo
+      - BS_DB_PASSWORD=microservices
+      - BS_ETCD_ADDRS=etcd:2379
+      - BS_ES_ADDRS=http://es:9200
+      - BS_REDIS_ADDR=redis:6379
+      - BS_REDIS_SENTINEL_ENABLED=false
+      - BS_AMQP_URI=amqp://rabbitmq:5672/
+      - BS_REMOTE_BI_HTTP_ADDR=bi:8001
+      - BS_REMOTE_BE_HTTP_ADDR=be:8002
+      - BS_REMOTE_GO_WITNESS_ADDR=http://gowitness:7171
+      - BS_JAEGER_ADDR=http://jaeger:14268/api/traces
+    depends_on:
+      mysql:
+        condition: service_healthy
+      etcd:
+        condition: service_started
+      redis:
+        condition: service_started
+      es:
+        condition: service_started
+      rabbitmq:
+        condition: service_started

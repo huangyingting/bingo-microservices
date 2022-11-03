@@ -1,0 +1,208 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gowitness
+  labels:
+    app: gowitness
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gowitness
+  template:
+    metadata:
+      labels:
+        app: gowitness
+    spec:
+      containers:
+      - name: gowitness
+        image: huangyingting/gowitness:latest
+        command: ["gowitness"]
+        args: ["server", "--address", "0.0.0.0:7171", "-X", "800", "-Y", "600"]
+        ports:
+        - name: http
+          containerPort: 7171
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bg
+  labels:
+    app: bg
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bg
+  template:
+    metadata:
+      labels:
+        app: bg
+    spec:
+      containers:
+      - name: bg
+        image: ghcr.io/huangyingting/bg:master
+        imagePullPolicy: Always
+        env:
+        - name: BG_JAEGER_ADDR
+          value: http://jaeger-collector.jaeger.svc.cluster.local:14268/api/traces
+        ports:
+        - name: http
+          containerPort: 8000 
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bi
+  labels:
+    app: bi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bi
+  template:
+    metadata:
+      labels:
+        app: bi
+    spec:
+      containers:
+      - name: be
+        image: ghcr.io/huangyingting/bi:master
+        imagePullPolicy: Always
+        env:
+        - name: BI_JAEGER_ADDR
+          value: http://jaeger-collector.jaeger.svc.cluster.local:14268/api/traces
+        - name: BI_DB_DRIVER
+          value: mysql
+        - name: BI_DB_HOST
+          value: mysql-primary.mysql.svc.cluster.local
+        - name: BI_DB_PORT
+          value: "3306"
+        - name: BI_DB_DATABASE
+          value: bingo
+        - name: BI_DB_USERNAME
+          value: bingo
+        - name: BI_DB_PASSWORD
+          value: microservices
+        - name: BI_AMQP_URI
+          value: amqp://bingo:microservices@rabbitmq.rabbitmq.svc.cluster.local:5672/
+        - name: BI_REMOTE_BG_HTTP_ADDR
+          value: bg:8000
+        ports:
+        - name: http
+          containerPort: 8001
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: be
+  labels:
+    app: be
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: be
+  template:
+    metadata:
+      labels:
+        app: be
+    spec:
+      containers:
+      - name: be
+        image: ghcr.io/huangyingting/be:master
+        imagePullPolicy: Always
+        env:
+        - name: BE_JAEGER_ADDR
+          value: http://jaeger-collector.jaeger.svc.cluster.local:14268/api/traces
+        ports:
+        - name: http
+          containerPort: 8002          
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bs
+  labels:
+    app: bs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bs
+  template:
+    metadata:
+      labels:
+        app: bs
+    spec:
+      containers:
+      - name: bs
+        image: ghcr.io/huangyingting/bs:master
+        imagePullPolicy: Always
+        env:
+        - name: BS_DB_DRIVER
+          value: mysql
+        - name: BS_DB_HOST
+          value: mysql-primary.mysql.svc.cluster.local
+        - name: BS_DB_PORT
+          value: "3306"
+        - name: BS_DB_DATABASE
+          value: bingo
+        - name: BS_DB_USERNAME
+          value: bingo
+        - name: BS_DB_PASSWORD
+          value: microservices
+        - name: BS_ETCD_ADDRS
+          value: etcd.etcd.svc.cluster.local:2379
+        - name: BS_ETCD_USERNAME
+          value: root
+        - name: BS_ETCD_PASSWORD
+          value: microservices
+        - name: BS_ES_ADDRS
+          value: http://es-es-http.es.svc.cluster.local:9200
+        - name: BS_ES_USERNAME
+          value: bingo
+        - name: BS_ES_PASSWORD
+          value: microservices
+        - name: BS_REDIS_ADDR
+          value: redis.redis.svc.cluster.local:6379
+        - name: BS_REDIS_USERNAME
+          value: 
+        - name: BS_REDIS_PASSWORD
+          value: microservices
+        - name: BS_REDIS_SENTINEL_ENABLED
+          value: "false"
+        # - name: BS_REDIS_SENTINEL_MASTER_SET
+          # value: bingo
+        # - name: BS_REDIS_SENTINEL_ADDRS
+          # value: redis-node-0.redis-headless.redis.svc.cluster.local:26379,redis-node-1.redis-headless.redis.svc.cluster.local:26379,redis-node-2.redis-headless.redis.svc.cluster.local:26379
+        - name: BS_AMQP_URI
+          value: amqp://bingo:microservices@rabbitmq.rabbitmq.svc.cluster.local:5672/
+        - name: BS_REMOTE_BI_HTTP_ADDR
+          value: bi:8001
+        - name: BS_REMOTE_BE_HTTP_ADDR
+          value: be:8002
+        - name: BS_REMOTE_GO_WITNESS_ADDR
+          value: https://gowitness.cilium.i-csu.com
+        - name: BS_JAEGER_ADDR
+          value: http://jaeger-collector.jaeger.svc.cluster.local:14268/api/traces
+        - name: BS_JWT_ISSUER
+          value: REPLACE_ME
+        - name: BS_JWT_AUDIENCE
+          value: REPLACE_ME
+        - name: BS_JWT_TID
+          value: REPLACE_ME
+        - name: BS_RECAPTCHA_SITE_KEY
+          value: REPLACE_ME
+        - name: BS_RECAPTCHA_SECRET_KEY
+          value: REPLACE_ME
+        - name: BF_SCOPES_PREFIX
+          value: REPLACE_ME
+        - name: BF_CLIENT_ID
+          value: REPLACE_ME
+        - name: BF_AUTHORITY
+          value: REPLACE_ME
+        ports:
+        - name: http
+          containerPort: 8080

@@ -1,0 +1,459 @@
+# Generated with protoc-gen-openapi
+# https://github.com/google/gnostic/tree/master/cmd/protoc-gen-openapi
+
+openapi: 3.0.3
+info:
+    title: ""
+    version: 0.0.1
+paths:
+    /v1/captcha/verify:
+        post:
+            tags:
+                - Captcha
+            operationId: Captcha_Verify
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/VerifyRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/VerifyResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/shorturl:
+        get:
+            tags:
+                - ShortUrl
+            operationId: ShortUrl_ListShortUrl
+            parameters:
+                - name: start
+                  in: query
+                  schema:
+                    type: integer
+                    format: int64
+                - name: count
+                  in: query
+                  schema:
+                    type: integer
+                    format: int64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListShortUrlResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        put:
+            tags:
+                - ShortUrl
+            operationId: ShortUrl_UpdateShortUrl
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateShortUrlRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ShortUrlResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - ShortUrl
+            operationId: ShortUrl_CreateShortUrl
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateShortUrlRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ShortUrlResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/shorturl-bi/clicks/{alias}:
+        get:
+            tags:
+                - ShortUrlBI
+            operationId: ShortUrlBI_Clicks
+            parameters:
+                - name: alias
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ClicksReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/shorturl/{alias}:
+        get:
+            tags:
+                - ShortUrl
+            operationId: ShortUrl_GetShortUrl
+            parameters:
+                - name: alias
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ShortUrlResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - ShortUrl
+            operationId: ShortUrl_DeleteShortUrl
+            parameters:
+                - name: alias
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/system/cpu:
+        put:
+            tags:
+                - System
+            operationId: System_UpdateCpuLoad
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CpuLoadRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/system/mem:
+        post:
+            tags:
+                - System
+            operationId: System_UpdateMemLoad
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/MemLoadRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/system/stats:
+        get:
+            tags:
+                - System
+            operationId: System_Stats
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/StatsResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/tag-suggest/{query}:
+        get:
+            tags:
+                - TagSuggest
+            operationId: TagSuggest_Verify
+            parameters:
+                - name: query
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/SuggestResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+components:
+    schemas:
+        ClicksReply:
+            type: object
+            properties:
+                clicks:
+                    type: integer
+                    format: uint64
+        CpuLoadRequest:
+            type: object
+            properties:
+                percent:
+                    type: integer
+                    format: int64
+        CreateShortUrlRequest:
+            type: object
+            properties:
+                alias:
+                    type: string
+                url:
+                    type: string
+        GoogleProtobufAny:
+            type: object
+            properties:
+                '@type':
+                    type: string
+                    description: The type of the serialized message.
+            additionalProperties: true
+            description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
+        ListShortUrlResponse:
+            type: object
+            properties:
+                value:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ShortUrlResponse'
+                start:
+                    type: integer
+                    format: int64
+                count:
+                    type: integer
+                    format: int64
+        MemLoadRequest:
+            type: object
+            properties:
+                size:
+                    type: integer
+                    format: int64
+        ShortUrlResponse:
+            type: object
+            properties:
+                alias:
+                    type: string
+                url:
+                    type: string
+                title:
+                    type: string
+                tags:
+                    type: array
+                    items:
+                        type: string
+                fraudDetection:
+                    type: boolean
+                disabled:
+                    type: boolean
+                noReferrer:
+                    type: boolean
+                utmSource:
+                    type: string
+                utmMedium:
+                    type: string
+                utmCampaign:
+                    type: string
+                utmTerm:
+                    type: string
+                utmContent:
+                    type: string
+                createdAt:
+                    type: string
+                    format: date-time
+        StatsResponse:
+            type: object
+            properties:
+                hostname:
+                    type: string
+                os:
+                    type: string
+                platform:
+                    type: string
+                platformVersion:
+                    type: string
+                cpuModelName:
+                    type: string
+                cpuCores:
+                    type: integer
+                    format: int32
+                cpuCacheSize:
+                    type: integer
+                    format: int32
+                cpuMhz:
+                    type: number
+                    format: double
+                goArch:
+                    type: string
+                goVersion:
+                    type: string
+                memTotal:
+                    type: integer
+                    format: uint64
+                localIp:
+                    type: string
+                externalIp:
+                    type: string
+                isDocker:
+                    type: boolean
+                isKubernetes:
+                    type: boolean
+                environment:
+                    type: string
+                location:
+                    type: string
+                zone:
+                    type: string
+                name:
+                    type: string
+                size:
+                    type: string
+        Status:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+                    format: int32
+                message:
+                    type: string
+                    description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+                details:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/GoogleProtobufAny'
+                    description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
+            description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
+        SuggestResponse:
+            type: object
+            properties:
+                value:
+                    type: array
+                    items:
+                        type: string
+        UpdateShortUrlRequest:
+            type: object
+            properties:
+                alias:
+                    type: string
+                url:
+                    type: string
+                title:
+                    type: string
+                tags:
+                    type: array
+                    items:
+                        type: string
+                fraudDetection:
+                    type: boolean
+                disabled:
+                    type: boolean
+                noReferrer:
+                    type: boolean
+                utmSource:
+                    type: string
+                utmMedium:
+                    type: string
+                utmCampaign:
+                    type: string
+                utmTerm:
+                    type: string
+                utmContent:
+                    type: string
+        VerifyRequest:
+            type: object
+            properties:
+                token:
+                    type: string
+                alias:
+                    type: string
+        VerifyResponse:
+            type: object
+            properties:
+                score:
+                    type: number
+                    format: double
+                url:
+                    type: string
+tags:
+    - name: Captcha
+    - name: ShortUrl
+    - name: ShortUrlBI
+    - name: System
+    - name: TagSuggest

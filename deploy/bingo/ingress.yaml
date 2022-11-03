@@ -1,0 +1,49 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+  labels:
+    app: gowitness
+  name: gowitness
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: gowitness.cilium.i-csu.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: gowitness
+            port:
+              number: 7171
+        path: /
+        pathType: ImplementationSpecific
+  tls:
+  - hosts:
+    - gowitness.cilium.i-csu.com
+    secretName: gowitness-tls
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+  name: bs
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: bingo.cilium.i-csu.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: bs
+            port:
+              number: 8080
+        pathType: Prefix
+        path: /
+  tls:
+  - hosts:
+    - bingo.cilium.i-csu.com
+    secretName: bingo-tls

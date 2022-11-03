@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package api.be.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "api/be/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.be.v1";
+option java_outer_classname = "ApiBEV1";
+
+service BE {
+  rpc Extract (ExtractRequest) returns (ExtractReply) {
+    option (google.api.http) = {
+      post: "/v1/extract"
+      body: "*"
+    };
+  }
+}
+
+message ExtractRequest {
+  string url = 1;
+}
+
+message ExtractReply {
+  string title = 1;
+  repeated string authors = 2;
+  string published_date = 3;
+  repeated string videos = 4;
+  repeated string keywords = 5;
+  repeated string tags = 6;
+  repeated string meta_keywords = 7;
+  string summary = 8;
+}

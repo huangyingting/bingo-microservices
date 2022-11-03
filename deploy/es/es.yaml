@@ -1,0 +1,38 @@
+kind: Secret
+apiVersion: v1
+metadata:
+  name: bingo-filerealm-secret
+stringData:
+  users: |-
+    bingo:$2a$10$7lfTWMqMUzd3fwsTVjZaW.Ju.v1EZwCvHEwRbu6NUSAk.Q1zT3cya
+  users_roles: |-
+    superuser:bingo
+---
+apiVersion: elasticsearch.k8s.elastic.co/v1
+kind: Elasticsearch
+metadata:
+  name: es
+spec:
+  version: 7.17.7
+  auth:
+    fileRealm:
+    - secretName: bingo-filerealm-secret
+  nodeSets:
+  - name: default
+    count: 1
+    volumeClaimTemplates:
+    - metadata:
+        name: elasticsearch-data # Do not change this name unless you set up a volume mount for the data path.
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 8Gi
+        storageClassName: default
+    config:
+      node.store.allow_mmap: false
+  http:
+    tls:
+      selfSignedCertificate:
+        disabled: true

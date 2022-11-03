@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package api.bs.v1;
+
+import "errors/errors.proto";
+
+option go_package = "api/bs/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.bs.v1";
+option objc_class_prefix = "ApiBSV1";
+
+enum ErrorReason {
+  option (errors.default_code) = 500;
+  BAD_REQUEST = 0 [(errors.code) = 400];
+  SITE_VERIFY_FAILED = 1 [(errors.code) = 401];
+  INTERNAL_SERVER_ERROR = 2 [(errors.code) = 500];
+  BAD_GATEWAY = 3 [(errors.code) = 502];
+}

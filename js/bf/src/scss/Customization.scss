@@ -1,0 +1,27 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
+// Override default variables before the import
+$font-family-sans-serif: 'Poppins', sans-serif;
+
+$min-contrast-ratio: 2;
+$body-color:#495057;
+$primary: #4da6e7;
+$btn-font-weight: 500;
+$nav-link-font-weight: 500;
+$navbar-light-color: #495057;
+$navbar-light-hover-color: #4da6e7;
+$navbar-light-active-color: #4da6e7;
+$card-border-width: 0;
+$box-shadow: 0 0 1rem rgba(0,0,0,0.1) !default;
+$alert-border-width: 0;
+$toast-font-size: 1rem;
+$small-font-size: 0.75em;
+$input-btn-focus-width: 0.075rem;
+$input-border-width: 1px;
+
+// Import Bootstrap and its default variables
+@import '~bootstrap/scss/bootstrap.scss';
+
+$body-color:#dad9d5;
+
+

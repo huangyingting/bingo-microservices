@@ -1,0 +1,77 @@
+server:
+  http:
+    addr: "${HTTP_ADDR:0.0.0.0:8080}"
+    timeout: "${HTTP_TIMEOUT:1s}"
+  grpc:
+    addr: "${GRPC_ADDR:0.0.0.0:9090}"
+    timeout: "${GRPC_TIMEOUT:1s}"
+  debug: "${DEBUG:true}"
+  page_size: "${PAGE_SIZE:5}"
+store:
+  driver: "${DB_DRIVER:postgres}"
+  host: "${DB_HOST:localhost}"
+  port: "${DB_PORT:5432}"
+  database: "${DB_DATABASE:bingo}"
+  username: "${DB_USERNAME:bingo}"
+  password: "${DB_PASSWORD:microservices}"
+alias:
+  start_time: "${START_TIME:2020-01-01}"
+  bit_len_time: 35
+  bit_len_sequence: 7
+  bit_len_machine_id: 5
+  etcd_addrs: ["${ETCD_ADDRS:localhost:2379}"]
+  etcd_username: "${ETCD_USERNAME:}"
+  etcd_password: "${ETCD_PASSWORD:}"
+search:
+  addrs: ["${ES_ADDRS:http://localhost:9200}"]
+  index_name: "${ES_INDEX_NAME:short_url}"
+  sniff: "${ES_SNIFF:false}"
+  number_of_shards: "${ES_NUMBER_OF_SHARDS:1}"
+  number_of_replicas: "${ES_NUMBER_OF_REPLICAS:0}"
+  username: "${ES_USERNAME:}"
+  password: "${ES_PASSWORD:}"
+cache:
+  addr: "${REDIS_ADDR:localhost:6379}"
+  username: "${REDIS_USERNAME:}"
+  password: "${REDIS_PASSWORD:}"
+  sentinel_enabled: "${REDIS_SENTINEL_ENABLED:false}"
+  sentinel_master_set: "${REDIS_SENTINEL_MASTER_SET:}"
+  sentinel_addrs: ["${REDIS_SENTINEL_ADDRS:}"]
+  sentinel_username: "${REDIS_SENTINEL_USERNAME:}"
+  sentinel_password: "${REDIS_SENTINEL_PASSWORD:}"
+  cache_ttl: "${REDIS_CACHE_TTL:3600}"
+recaptcha:
+  site_key: "${RECAPTCHA_SITE_KEY:}"
+  secret_key: "${RECAPTCHA_SECRET_KEY:}"
+jwt:
+  issuer: "${JWT_ISSUER:}"
+  audience: "${JWT_AUDIENCE:}"
+  fallback_signature_algorithm: "${JWT_FALLBACK_SIGNATURE_ALGORITHM:RS256}"
+  required_claims:
+    tid: "${JWT_TID:}"
+    scp: "${JWT_SCP:API.Read API.Write}"
+publisher:
+  amqp_uri: "${AMQP_URI:amqp://localhost:5672/}"
+  name: clicks-publisher
+  ca_cert:
+  client_cert:
+  client_key:
+  exchange_name: bingo
+  exchange_type: direct
+  queue_mode: default
+  routing_key: clicks
+  worker_count: "${WORKER_COUNT:2}"
+  prefetch_count: "${PREFETCH_COUNT:2}"
+  retry_attempt: 1
+  retry_interval: 1s
+  connect_timeout: 5s
+bi:
+  grpc_addr: "${REMOTE_BI_GRPC_ADDR:localhost:9001}"
+  http_addr: "${REMOTE_BI_HTTP_ADDR:localhost:8001}"
+  protocol: HTTP
+be:
+  http_addr: "${REMOTE_BE_HTTP_ADDR:localhost:8002}"
+go_witness:
+  addr: "${REMOTE_GO_WITNESS_ADDR:http://localhost:7171}"
+jaeger:
+  addr: "${JAEGER_ADDR:http://localhost:14268/api/traces}"
