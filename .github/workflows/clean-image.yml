@@ -1,0 +1,20 @@
+name: 'Delete untagged images'
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  purge-image:
+    name: Delete untagged images
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete all untagged images from repository
+        uses: Chizkiyahu/delete-untagged-ghcr-action@v2
+        with:
+          token: ${{ secrets.DELETE_PACKAGE_TOKEN }}
+          repository_owner: ${{ github.repository_owner }}
+          repository: ${{ github.repository }}
+          untagged_only: true
+          owner_type: user
