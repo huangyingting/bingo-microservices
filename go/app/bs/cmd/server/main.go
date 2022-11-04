@@ -307,7 +307,7 @@ func main() {
 				var data = []byte(fmt.Sprintf("{\"url\": \"%s\",\"oneshot\": \"true\"}", cachedShortUrl.Url))
 				resp, err := otelhttp.Post(
 					otelCtx,
-					"http://localhost:7171/api/screenshot",
+					bc.GoWitness.Addr+"/api/screenshot",
 					"application/json",
 					bytes.NewBuffer(data),
 				)
