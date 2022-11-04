@@ -29,7 +29,7 @@ kind: Ingress
 metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
-  name: bs
+  name: bingo
 spec:
   ingressClassName: nginx
   rules:

@@ -24,6 +24,8 @@ ifeq ($(DB),mongo)
 		DB_ENV = -e BI_DB_DRIVER=mongo -e BI_DB_HOST=host.docker.internal -e BI_DB_PORT=27017 -e BI_DB_DATABASE=bingo -e BI_DB_USERNAME=bingo -e BI_DB_PASSWORD=microservices
 endif
 
+$(eval export $(shell sed -ne 's/ *#.*$$//; /./ s/=.*$$// p' .env.local))
+
 .PHONY: up
 up:
 	$(DB_DOCKER_CMD)

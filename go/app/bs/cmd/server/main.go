@@ -1,8 +1,12 @@
 package main
 
 import (
+	"bytes"
 	"context"
+	"encoding/base64"
 	"flag"
+	"fmt"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"os/signal"
@@ -38,6 +42,7 @@ import (
 	"github.com/xenitab/go-oidc-middleware/oidcgin"
 	opts "github.com/xenitab/go-oidc-middleware/options"
 	"go.opentelemetry.io/contrib/instrumentation/github.com/gin-gonic/gin/otelgin"
+	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/exporters/jaeger"
@@ -253,6 +258,7 @@ func main() {
 			// return 404 directly instead of detailed error to avoid attack
 			if err != nil {
 				ctx.String(http.StatusNotFound, "404 page not found")
+				h.Error(err)
 				// ctx.String(http.StatusInternalServerError, err.Error())
 				return
 			}
@@ -267,6 +273,7 @@ func main() {
 				otelCtx := ctx.Request.Context()
 				conn, err := transhttp.NewClient(
 					otelCtx,
+					transhttp.WithTimeout(30*time.Second),
 					transhttp.WithMiddleware(
 						recovery.Recovery(),
 						tracing.Client(),
@@ -277,6 +284,7 @@ func main() {
 				if err != nil {
 					ctx.String(http.StatusNotFound, "404 page not found")
 					// ctx.String(http.StatusInternalServerError, err.Error())
+					h.Error(err)
 					return
 				}
 				defer conn.Close()
@@ -288,16 +296,40 @@ func main() {
 				// return 404 directly instead of detailed error to avoid attack
 				if err != nil {
 					ctx.String(http.StatusNotFound, "404 page not found")
+					h.Error(err)
 					// ctx.String(http.StatusInternalServerError, err.Error())
 					return
 				}
+
+				var base64Encoding string = NO_IMAGE_AVAILABLE
+
+				// load url snapshot from gowitness
+				var data = []byte(fmt.Sprintf("{\"url\": \"%s\",\"oneshot\": \"true\"}", cachedShortUrl.Url))
+				resp, err := otelhttp.Post(
+					otelCtx,
+					"http://localhost:7171/api/screenshot",
+					"application/json",
+					bytes.NewBuffer(data),
+				)
+				if err == nil {
+					defer resp.Body.Close()
+					bytes, err := ioutil.ReadAll(resp.Body)
+					if err == nil {
+						base64Encoding = base64.StdEncoding.EncodeToString(bytes)
+					} else {
+						h.Error(err)
+					}
+				} else {
+					h.Error(err)
+				}
+
 				otelgin.HTML(ctx, http.StatusOK, "Expand", gin.H{
 					"Alias":    alias,
 					"Url":      cachedShortUrl.Url,
 					"Title":    r.Title,
 					"Keywords": strings.Join(r.Keywords, " "),
 					"Summary":  r.Summary,
-					"Snapshot": bc.GoWitness.Addr + "/?url=" + cachedShortUrl.Url,
+					"Snapshot": base64Encoding,
 				})
 				return
 			}

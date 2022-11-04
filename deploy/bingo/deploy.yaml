@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: gowitness
-        image: huangyingting/gowitness:latest
+        image: ghcr.io/huangyingting/gowitness:latest
         command: ["gowitness"]
         args: ["server", "--address", "0.0.0.0:7171", "-X", "800", "-Y", "600"]
         ports:
@@ -184,7 +184,7 @@ spec:
         - name: BS_REMOTE_BE_HTTP_ADDR
           value: be:8002
         - name: BS_REMOTE_GO_WITNESS_ADDR
-          value: https://gowitness.cilium.i-csu.com
+          value: http://gowitness:7171
         - name: BS_JAEGER_ADDR
           value: http://jaeger-collector.jaeger.svc.cluster.local:14268/api/traces
         - name: BS_JWT_ISSUER
