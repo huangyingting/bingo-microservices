@@ -1,54 +1,56 @@
 # Bingo - Cloud Native Showcase Application
 ## Introduction
-Bingo is a short URL application based on microservice's architecture. It helps you create and share branded links at a scale.
+Bingo is an URL shortener application based on microservices architecture. It is designed to create and share tiny URLs at a scale.
 
-The purpose of creating this short URL application for cloud native showcase is, the business logic of generating and using a short URL could be simple or complicated at both time, which gives us enough space to demo a few of cloud native design principles.
+The purpose of creating this URL shortener application for cloud native showcase is, the business logic of generating and using a short URL could be simple or complicated at both time, it gives us enough space to demo a few of cloud native design principles.
 
 Below high-level architecture diagram shows all related components and services  
 ![high-level-design](./docs/images/Bingo-Design.svg)
 
-- **BF** - Singal Page Application (SPA), a frontend application written in JavaScript with React.js who provides web UI to create and manage short URL.
-- **BS** - Bingo service, core service written in Golang provides API to create, update, delete and get short URL, this service also serves as HTTP server to redirect URL.
-- **BE** - Bingo Extract service, is a service written in Python where you can find out where the shortened URL will take you to before clicking on the link.
-- **BI** - Bingo Intelligence service, is a service written in Golang that provides detailed statistics for your short URL, such as clicks, end user geo distributions etc.
-- **BG** - Bingo Geo service, geo location service written in Golang translates end user IP address to country and city.
+- **BF** - Single page application (SPA), a frontend application written in react.js who provides modern web UI to create and manage short URLs.
+- **BS** - Bingo service, core service written in golang provides API to create, update, delete and get short URLs, it is also a HTTP server to redirect URL, protect bot attack and generate summary for URL.
+- **BE** - Bingo extract service, URL summary service written in python, where you can get an overview of the short URL before click it, it is useful in blocking malicious short URL.
+- **BI** - Bingo intelligence service, is a service written in golang that provides detailed statistics for your short URL, such as clicks, end user geo distributions etc.
+- **BG** - Bingo geo service, is a geo location service written in golang who translates end user IP address to country and city.
 - **GoWitness** - [A website screenshot utility](https://github.com/sensepost/gowitness) written in Golang.
 
 ## Features
-- Multiple database types of support, including SQLite (testing purpose), MySQL, Postgres, SQL Server and Mongodb.
+- Support multiple databases as the backend storage, including sqlite (testing purpose), mysql, postgres, microsoft sql server and mongodb.
 
-- Observability support, all microservices support logging, metrics (Prometheus exporter), and tracing (Jaeger based distributed tracing support).
+- Observability support, all microservices support logging, metrics (prometheus exporter), and distributed tracing (jaeger based).
 
-- AAD authentication & authorization support, BS APIs are protected by oauth so only validated user can call those APIs to create, edit, update, and delete.
+- AAD authentication & authorization support, BS APIs are protected by oauth so only validated user can call API.
 
-- REST, GRPC and WebSocket. REST API is exposed for external use, internally, BE and BI services support GRPC. WebSocket is enabled on BS service to send back server updated message.
+- REST and grpc API as well as websocket support. REST API is exposed for external use, internally, BE and BI services support GRPC. Websocket is enabled on BS service to send back server updated message.
 
-- Message queue, RabbitMQ provides message exchange between BS and BI services. BS service publishes click stream to RabbitMQ, and BI service subscribes to click stream.
+- Message queue, RabbitMQ provides message exchange between BS and BI services. BS service publishes clickstream to RabbitMQ, and BI service subscribes to clickstream data.
 
 - Unique alias generator, when create a short URL, a 8 characters alias will be generated, Bingo supports a [sonyflake](https://github.com/sony/sonyflake) based algorithm to generate this alias.
 
-- Distributed lock, when generating alias, the algorithm requires a unique machine ID so no duplicated alias will be generated from each machine, ETCD distributed lock is used here to provide this capability.
+- Distributed lock, when generate alias, the algorithm requires a unique machine ID so no duplicated alias will be generated from each machine, ETCD distributed lock is used here to provide this capability.
 
-- Caching and bloom filter support, on top of database layer, BS service also uses Redis for caching and bloom filter to protect database from overloading.
+- Caching and bloom filter support, on top of database layer, BS service also uses redis for caching and bloom filter to protect database from overloading.
 
-- Tag suggestion, BS uses Elasticsearch to store short URL tags and provide tag suggestion based on existing tags - a seamless search as you type experience.
+- Tag suggestion, BS uses elastic search to store short URL tags and provide tag suggestion based on existing tags - a seamless search as you type experience.
 
 - Natural language processing, BE uses NLP to extract web URL's keywords and summary.
 
 ## How to build and run
-### Prerequisite
-Bingo replies on AAD to provide authentication & authorization, the application itself is pre-configured with an AAD tenant already, if you prefer to use your own AAD tenant, below are the brief steps
+### Prerequisite - AAD/AAD B2C
+Bingo replies on AAD to provide authentication & authorization, follow below steps to register bingo frontend and backend app from AAD or AAD B2c tenant
 - Create an AAD or AAD B2C tenant
-- Associate a custom domain name
+- Register a SPA AAD client application(used by BF, frontend) and an API application(used by BS, backend)
+- Create scopes for API application then assign those socpes as API permissions to SPA application
+- Record client application id, scopes and oauth2 endpoint, those information are required to configure bf frontend and BS service.
 - Add a few of users into the tenant
-- Register AAD client application(used by BF) and api application(used by BS)
-- Create scopes for api application then assign those socpes as API permissions to client application
-- Record client application id, scopes and oauth2 endpoint, those information are required to configure client app and BS service. For more details, refer to js/bf/src/Global.js and go/app/bs/configs/config.yaml
 
 References
 1. [Register a Microsoft Graph application](https://docs.microsoft.com/en-us/azure/active-directory-b2c/microsoft-graph-get-started?tabs=app-reg-ga)
 2. AAD [Single-page application: App registration](https://docs.microsoft.com/en-us/azure/active-directory/develop/scenario-spa-app-registration), AAD B2C [Register a single-page application (SPA) in Azure Active Directory B2C](https://docs.microsoft.com/en-us/azure/active-directory-b2c/tutorial-register-spa)
 3. AAD [Protected web API: App registration](https://docs.microsoft.com/en-us/azure/active-directory/develop/scenario-protected-web-api-app-registration), AAD B2C [Add a web API application to your Azure Active Directory B2C tenant](https://docs.microsoft.com/en-us/azure/active-directory-b2c/add-web-api-application?tabs=app-reg-ga)
+
+### Prerequisite - Google reCAPTCHA
+Bingo relies on [Google reCAPTCHA](https://www.google.com/recaptcha/about/) for bot protection, please create a reCAPTCHA from reCAPTCHA admin portal, and record SITE KEY as well as SECRET KEY.
 
 ### Build and run locally
 1. Clone the repo, 
@@ -63,18 +65,53 @@ References
     ```
     make docker
     ```
-4. Start all services 
+4. Create a file named .env.local under js/bf directory with below data
+    ```
+    BF_SCOPES_PREFIX=APPLICATION_ID_URI/
+    BF_CLIENT_ID=SPA_APPLICATION_CLIENT_ID
+    BF_AUTHORITY=https://login.microsoftonline.com/TENANT_ID
+    ```
+5. Create a file named .env.local under go/app/bs directory with below data
+    ```
+    BS_RECAPTCHA_SITE_KEY=GOOGLE_RECAPTCHA_SITE_KEY
+    BS_RECAPTCHA_SECRET_KEY=GOOGLE_RECAPTCHA_SECRET_KEY
+    BS_JWT_ISSUER=https://sts.windows.net/TENANT_ID/
+    BS_JWT_AUDIENCE=APPLICATION_ID_URI
+    BS_JWT_TID=TENANT_ID
+    ```
+6. Start all services 
     ```
     make up
     ```
-5. Visit URL http://localhost:8080 to login with your AAD user account.
+7. Visit URL http://localhost:8080 to login with your AAD/AAD B2C user account.
 
 ### Github CI/CD
-Bingo is integrated with Github Action, two workflows are included
-- Build & publish docker images to github container registry
+Bingo is integrated with Github Actions, three workflows are included
+- Build & push docker images to github container registry
 - CodeQL to scan and discover vulnerabilities across go, javascript and python scripts
+- Clean untagged images
+For more details, check .github/workflows directory
 
 ### Kubernetes deployment
-Bingo supports Kubernetes deployment, a full set of deployment includes MySQL, Redis, rabbitmq and etcd (helm charts from bitnami), Elasticsearch (operator from Elasticsearch), nginx ingress controller, cert-manager as well Prometheus (Prometheus-community/prometheus).
+Bingo supports kubernetes, a full set of deployment includes mysql, redis, rabbitmq and etcd (helm charts from bitnami), elasticsearch (operator from elasticsearch), nginx ingress controller, cert-manager as well prometheus (prometheus-community/prometheus).
 
-Those scripts and deployment files are included in deploy folder; deploy/bingo has all bingo deployment yaml files.
+Deployment scripts files are included in deploy/ folder, deployment/bingo folder has bingo related yaml files, deploy.yaml needs to be customized to include below data
+
+    ```
+    - name: BS_JWT_ISSUER
+        value: REPLACE_ME
+    - name: BS_JWT_AUDIENCE
+        value: REPLACE_ME
+    - name: BS_JWT_TID
+        value: REPLACE_ME
+    - name: BS_RECAPTCHA_SITE_KEY
+        value: REPLACE_ME
+    - name: BS_RECAPTCHA_SECRET_KEY
+        value: REPLACE_ME
+    - name: BF_SCOPES_PREFIX
+        value: REPLACE_ME
+    - name: BF_CLIENT_ID
+        value: REPLACE_ME
+    - name: BF_AUTHORITY
+        value: REPLACE_ME
+    ```
