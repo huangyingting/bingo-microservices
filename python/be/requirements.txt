@@ -5,4 +5,4 @@ nltk==3.7
 opentelemetry-instrumentation-flask==0.30b1
 opentelemetry-instrumentation-requests==0.30b1
 opentelemetry-exporter-jaeger==1.11.1
-prometheus-flask-exporter==0.20.1
+prometheus-flask-exporter==0.20.3
