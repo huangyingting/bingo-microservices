@@ -11,10 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Prune pull request image
-        uses: vlaurin/action-ghcr-prune@main
+        uses: snok/container-retention-policy@v1
         with:
           token: ${{ secrets.DELETE_PACKAGE_TOKEN }}
-          organization: huangyingting
-          container: bs
-          dry-run: true # Dry-run first, then change to `false`
-          untagged: false
+          image-names: huangyingting/bs
+          account-type: personal
+          filter-tags: pr-
