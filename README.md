@@ -97,7 +97,7 @@ Bingo supports kubernetes, a full set of deployment includes mysql, redis, rabbi
 
 Deployment scripts files are included in deploy/ folder, deployment/bingo folder has bingo related yaml files, deploy.yaml needs to be customized to include below data
 
-    ```
+```
     - name: BS_JWT_ISSUER
         value: REPLACE_ME
     - name: BS_JWT_AUDIENCE
@@ -114,4 +114,4 @@ Deployment scripts files are included in deploy/ folder, deployment/bingo folder
         value: REPLACE_ME
     - name: BF_AUTHORITY
         value: REPLACE_ME
-    ```
+```
