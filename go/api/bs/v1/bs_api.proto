@@ -39,6 +39,16 @@ service ShortUrl {
       delete: "/v1/shorturl/{alias}"
     };
   }
+  rpc Liveness (google.protobuf.Empty) returns (StatusReply) {
+    option (google.api.http) = {
+      get: "/healthz"
+    };
+  }
+  rpc Readiness (google.protobuf.Empty) returns (StatusReply) {
+    option (google.api.http) = {
+      get: "/readyz"
+    };
+  }
 }
 
 service Captcha {
@@ -139,6 +149,10 @@ message GetShortUrlRequest {
 
 message DeleteShortUrlRequest {
   string alias = 1;
+}
+
+message StatusReply {
+  string status = 1;
 }
 
 message VerifyRequest {

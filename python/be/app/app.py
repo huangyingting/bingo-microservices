@@ -31,6 +31,23 @@ metrics = GunicornInternalPrometheusMetrics(app, defaults_prefix="bingo_be")
 FlaskInstrumentor().instrument_app(app)
 RequestsInstrumentor().instrument()
 
+@app.route('/healthz')
+@metrics.do_not_track()
+def healthz():
+  response = {
+      "status": "OK"
+  }  
+  return jsonify(response), 200
+
+
+@app.route('/readyz')
+@metrics.do_not_track()
+def readyz():
+  response = {
+      "status": "OK"
+  }  
+  return jsonify(response), 200
+
 @app.route('/v1/extract', methods=['POST'])
 def extract_html():
     if not request.json or not 'url' in request.json:

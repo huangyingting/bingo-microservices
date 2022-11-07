@@ -11,6 +11,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -24,6 +25,8 @@ const _ = grpc.SupportPackageIsVersion7
 type BIClient interface {
 	// Sends a greeting
 	Clicks(ctx context.Context, in *ClicksRequest, opts ...grpc.CallOption) (*ClicksReply, error)
+	Liveness(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*StatusReply, error)
+	Readiness(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*StatusReply, error)
 }
 
 type bIClient struct {
@@ -43,12 +46,32 @@ func (c *bIClient) Clicks(ctx context.Context, in *ClicksRequest, opts ...grpc.C
 	return out, nil
 }
 
+func (c *bIClient) Liveness(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*StatusReply, error) {
+	out := new(StatusReply)
+	err := c.cc.Invoke(ctx, "/api.bi.v1.BI/Liveness", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *bIClient) Readiness(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*StatusReply, error) {
+	out := new(StatusReply)
+	err := c.cc.Invoke(ctx, "/api.bi.v1.BI/Readiness", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // BIServer is the server API for BI service.
 // All implementations must embed UnimplementedBIServer
 // for forward compatibility
 type BIServer interface {
 	// Sends a greeting
 	Clicks(context.Context, *ClicksRequest) (*ClicksReply, error)
+	Liveness(context.Context, *emptypb.Empty) (*StatusReply, error)
+	Readiness(context.Context, *emptypb.Empty) (*StatusReply, error)
 	mustEmbedUnimplementedBIServer()
 }
 
@@ -58,6 +81,12 @@ type UnimplementedBIServer struct {
 
 func (UnimplementedBIServer) Clicks(context.Context, *ClicksRequest) (*ClicksReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Clicks not implemented")
+}
+func (UnimplementedBIServer) Liveness(context.Context, *emptypb.Empty) (*StatusReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Liveness not implemented")
+}
+func (UnimplementedBIServer) Readiness(context.Context, *emptypb.Empty) (*StatusReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Readiness not implemented")
 }
 func (UnimplementedBIServer) mustEmbedUnimplementedBIServer() {}
 
@@ -90,6 +119,42 @@ func _BI_Clicks_Handler(srv interface{}, ctx context.Context, dec func(interface
 	return interceptor(ctx, in, info, handler)
 }
 
+func _BI_Liveness_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BIServer).Liveness(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.bi.v1.BI/Liveness",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BIServer).Liveness(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BI_Readiness_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BIServer).Readiness(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.bi.v1.BI/Readiness",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BIServer).Readiness(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // BI_ServiceDesc is the grpc.ServiceDesc for BI service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -100,6 +165,14 @@ var BI_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Clicks",
 			Handler:    _BI_Clicks_Handler,
+		},
+		{
+			MethodName: "Liveness",
+			Handler:    _BI_Liveness_Handler,
+		},
+		{
+			MethodName: "Readiness",
+			Handler:    _BI_Readiness_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

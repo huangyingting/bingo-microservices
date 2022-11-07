@@ -12,6 +12,7 @@ import (
 	"bingo/app/bg/internal/conf"
 
 	"github.com/go-redis/redis/v8"
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 type GeoService struct {
@@ -76,5 +77,23 @@ func (s *GeoService) Location(
 		Ip:      in.Ip,
 		Country: geo[1],
 		City:    geo[2],
+	}, nil
+}
+
+func (s *GeoService) Readiness(
+	ctx context.Context,
+	in *emptypb.Empty,
+) (*v1.StatusReply, error) {
+	return &v1.StatusReply{
+		Status: "OK",
+	}, nil
+}
+
+func (s *GeoService) Liveness(
+	ctx context.Context,
+	in *emptypb.Empty,
+) (*v1.StatusReply, error) {
+	return &v1.StatusReply{
+		Status: "OK",
 	}, nil
 }
