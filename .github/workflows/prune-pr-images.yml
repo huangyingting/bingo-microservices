@@ -17,4 +17,4 @@ jobs:
           cut-off: An hour ago UTC
           image-names: huangyingting/bs, huangyingting/be, huangyingting/bi, huangyingting/bg
           account-type: personal
-          filter-tags: pr-
+          filter-tags: pr-*
