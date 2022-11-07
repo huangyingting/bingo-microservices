@@ -3,7 +3,7 @@ name: 'Prune PR images'
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 0 * * *'
+    - cron: '0 0 * * 6'
 
 jobs:
   purge-image:
@@ -14,7 +14,7 @@ jobs:
         uses: snok/container-retention-policy@v1
         with:
           token: ${{ secrets.DELETE_PACKAGE_TOKEN }}
-          cut-off: An hour ago UTC
+          cut-off: One day ago UTC
           image-names: bs, be, bi, bg
           account-type: personal
           filter-tags: pr-*
