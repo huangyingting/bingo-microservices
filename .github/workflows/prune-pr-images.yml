@@ -1,4 +1,4 @@
-name: 'Prune images'
+name: 'Prune PR images'
 
 on:
   workflow_dispatch:
@@ -7,14 +7,14 @@ on:
 
 jobs:
   purge-image:
-    name: Prune images
+    name: Prune PR images
     runs-on: ubuntu-latest
     steps:
-      - name: Prune pull request images
+      - name: Prune all PR images
         uses: snok/container-retention-policy@v1
         with:
           token: ${{ secrets.DELETE_PACKAGE_TOKEN }}
-          cut-off: One hour ago UTC
+          cut-off: An hour ago UTC
           image-names: huangyingting/bs, huangyingting/be, huangyingting/bi, huangyingting/bg
           account-type: personal
           filter-tags: pr-

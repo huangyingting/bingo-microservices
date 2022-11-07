@@ -10,7 +10,7 @@ jobs:
     name: Prune untagged images
     runs-on: ubuntu-latest
     steps:
-      - name: Prune untagged images
+      - name: Prune all untagged images
         uses: Chizkiyahu/delete-untagged-ghcr-action@v2
         with:
           token: ${{ secrets.DELETE_PACKAGE_TOKEN }}
