@@ -1,4 +1,4 @@
-name: 'Clean untagged images'
+name: 'Prune untagged images'
 
 on:
   workflow_dispatch:
@@ -7,10 +7,10 @@ on:
 
 jobs:
   purge-image:
-    name: Clean untagged images
+    name: Prune untagged images
     runs-on: ubuntu-latest
     steps:
-      - name: Clean all untagged images from repository
+      - name: Prune untagged images
         uses: Chizkiyahu/delete-untagged-ghcr-action@v2
         with:
           token: ${{ secrets.DELETE_PACKAGE_TOKEN }}

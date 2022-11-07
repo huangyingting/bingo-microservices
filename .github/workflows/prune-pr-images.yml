@@ -3,18 +3,18 @@ name: 'Prune images'
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 0 * * 6'
+    - cron: '0 0 * * *'
 
 jobs:
   purge-image:
     name: Prune images
     runs-on: ubuntu-latest
     steps:
-      - name: Prune pull request image
+      - name: Prune pull request images
         uses: snok/container-retention-policy@v1
         with:
           token: ${{ secrets.DELETE_PACKAGE_TOKEN }}
-          cut-off: One day ago UTC
-          image-names: huangyingting/bs
+          cut-off: One hour ago UTC
+          image-names: huangyingting/bs, huangyingting/be, huangyingting/bi, huangyingting/bg
           account-type: personal
           filter-tags: pr-
