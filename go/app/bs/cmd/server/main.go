@@ -392,6 +392,14 @@ func main() {
 		ctx.JSON(http.StatusOK, response)
 	})
 
+	r.GET("/healthz", func(ctx *gin.Context) {
+		ctx.JSON(http.StatusOK, bsv1.StatusReply{Status: "OK"})
+	})
+
+	r.GET("/readyz", func(ctx *gin.Context) {
+		ctx.JSON(http.StatusOK, bsv1.StatusReply{Status: "OK"})
+	})
+
 	// use oidc to verify jwt token in following apis
 	openIdHandler := openIDHandler(bc.Jwt)
 	v1 := r.Group("/v1", openIdHandler)

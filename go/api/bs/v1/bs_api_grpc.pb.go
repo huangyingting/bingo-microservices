@@ -28,6 +28,8 @@ type ShortUrlClient interface {
 	ListShortUrl(ctx context.Context, in *ListShortUrlRequest, opts ...grpc.CallOption) (*ListShortUrlResponse, error)
 	GetShortUrl(ctx context.Context, in *GetShortUrlRequest, opts ...grpc.CallOption) (*ShortUrlResponse, error)
 	DeleteShortUrl(ctx context.Context, in *DeleteShortUrlRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	Liveness(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*StatusReply, error)
+	Readiness(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*StatusReply, error)
 }
 
 type shortUrlClient struct {
@@ -83,6 +85,24 @@ func (c *shortUrlClient) DeleteShortUrl(ctx context.Context, in *DeleteShortUrlR
 	return out, nil
 }
 
+func (c *shortUrlClient) Liveness(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*StatusReply, error) {
+	out := new(StatusReply)
+	err := c.cc.Invoke(ctx, "/api.shorturl.v1.ShortUrl/Liveness", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *shortUrlClient) Readiness(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*StatusReply, error) {
+	out := new(StatusReply)
+	err := c.cc.Invoke(ctx, "/api.shorturl.v1.ShortUrl/Readiness", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ShortUrlServer is the server API for ShortUrl service.
 // All implementations must embed UnimplementedShortUrlServer
 // for forward compatibility
@@ -92,6 +112,8 @@ type ShortUrlServer interface {
 	ListShortUrl(context.Context, *ListShortUrlRequest) (*ListShortUrlResponse, error)
 	GetShortUrl(context.Context, *GetShortUrlRequest) (*ShortUrlResponse, error)
 	DeleteShortUrl(context.Context, *DeleteShortUrlRequest) (*emptypb.Empty, error)
+	Liveness(context.Context, *emptypb.Empty) (*StatusReply, error)
+	Readiness(context.Context, *emptypb.Empty) (*StatusReply, error)
 	mustEmbedUnimplementedShortUrlServer()
 }
 
@@ -113,6 +135,12 @@ func (UnimplementedShortUrlServer) GetShortUrl(context.Context, *GetShortUrlRequ
 }
 func (UnimplementedShortUrlServer) DeleteShortUrl(context.Context, *DeleteShortUrlRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteShortUrl not implemented")
+}
+func (UnimplementedShortUrlServer) Liveness(context.Context, *emptypb.Empty) (*StatusReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Liveness not implemented")
+}
+func (UnimplementedShortUrlServer) Readiness(context.Context, *emptypb.Empty) (*StatusReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Readiness not implemented")
 }
 func (UnimplementedShortUrlServer) mustEmbedUnimplementedShortUrlServer() {}
 
@@ -217,6 +245,42 @@ func _ShortUrl_DeleteShortUrl_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ShortUrl_Liveness_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ShortUrlServer).Liveness(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.shorturl.v1.ShortUrl/Liveness",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ShortUrlServer).Liveness(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ShortUrl_Readiness_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ShortUrlServer).Readiness(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.shorturl.v1.ShortUrl/Readiness",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ShortUrlServer).Readiness(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ShortUrl_ServiceDesc is the grpc.ServiceDesc for ShortUrl service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -243,6 +307,14 @@ var ShortUrl_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteShortUrl",
 			Handler:    _ShortUrl_DeleteShortUrl_Handler,
+		},
+		{
+			MethodName: "Liveness",
+			Handler:    _ShortUrl_Liveness_Handler,
+		},
+		{
+			MethodName: "Readiness",
+			Handler:    _ShortUrl_Readiness_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -11,6 +11,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -24,6 +25,8 @@ const _ = grpc.SupportPackageIsVersion7
 type GeoClient interface {
 	// Sends ip address to geo request
 	Location(ctx context.Context, in *LocationRequest, opts ...grpc.CallOption) (*LocationReply, error)
+	Liveness(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*StatusReply, error)
+	Readiness(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*StatusReply, error)
 }
 
 type geoClient struct {
@@ -43,12 +46,32 @@ func (c *geoClient) Location(ctx context.Context, in *LocationRequest, opts ...g
 	return out, nil
 }
 
+func (c *geoClient) Liveness(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*StatusReply, error) {
+	out := new(StatusReply)
+	err := c.cc.Invoke(ctx, "/api.bg.v1.Geo/Liveness", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *geoClient) Readiness(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*StatusReply, error) {
+	out := new(StatusReply)
+	err := c.cc.Invoke(ctx, "/api.bg.v1.Geo/Readiness", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // GeoServer is the server API for Geo service.
 // All implementations must embed UnimplementedGeoServer
 // for forward compatibility
 type GeoServer interface {
 	// Sends ip address to geo request
 	Location(context.Context, *LocationRequest) (*LocationReply, error)
+	Liveness(context.Context, *emptypb.Empty) (*StatusReply, error)
+	Readiness(context.Context, *emptypb.Empty) (*StatusReply, error)
 	mustEmbedUnimplementedGeoServer()
 }
 
@@ -58,6 +81,12 @@ type UnimplementedGeoServer struct {
 
 func (UnimplementedGeoServer) Location(context.Context, *LocationRequest) (*LocationReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Location not implemented")
+}
+func (UnimplementedGeoServer) Liveness(context.Context, *emptypb.Empty) (*StatusReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Liveness not implemented")
+}
+func (UnimplementedGeoServer) Readiness(context.Context, *emptypb.Empty) (*StatusReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Readiness not implemented")
 }
 func (UnimplementedGeoServer) mustEmbedUnimplementedGeoServer() {}
 
@@ -90,6 +119,42 @@ func _Geo_Location_Handler(srv interface{}, ctx context.Context, dec func(interf
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Geo_Liveness_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GeoServer).Liveness(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.bg.v1.Geo/Liveness",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GeoServer).Liveness(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Geo_Readiness_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GeoServer).Readiness(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.bg.v1.Geo/Readiness",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GeoServer).Readiness(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Geo_ServiceDesc is the grpc.ServiceDesc for Geo service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -100,6 +165,14 @@ var Geo_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Location",
 			Handler:    _Geo_Location_Handler,
+		},
+		{
+			MethodName: "Liveness",
+			Handler:    _Geo_Liveness_Handler,
+		},
+		{
+			MethodName: "Readiness",
+			Handler:    _Geo_Readiness_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

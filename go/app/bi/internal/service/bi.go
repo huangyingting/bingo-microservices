@@ -7,6 +7,8 @@ import (
 	v1 "bingo/api/bi/v1"
 	"bingo/app/bi/internal/conf"
 	"bingo/app/bi/internal/data"
+
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 // BIService is a BI service.
@@ -88,4 +90,22 @@ func (s *BIService) Clicks(
 
 func (s *BIService) Create(ctx context.Context, click *data.Click) error {
 	return s.store.Create(click)
+}
+
+func (s *BIService) Readiness(
+	ctx context.Context,
+	in *emptypb.Empty,
+) (*v1.StatusReply, error) {
+	return &v1.StatusReply{
+		Status: "OK",
+	}, nil
+}
+
+func (s *BIService) Liveness(
+	ctx context.Context,
+	in *emptypb.Empty,
+) (*v1.StatusReply, error) {
+	return &v1.StatusReply{
+		Status: "OK",
+	}, nil
 }

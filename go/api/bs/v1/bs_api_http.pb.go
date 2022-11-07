@@ -23,6 +23,8 @@ type ShortUrlHTTPServer interface {
 	DeleteShortUrl(context.Context, *DeleteShortUrlRequest) (*emptypb.Empty, error)
 	GetShortUrl(context.Context, *GetShortUrlRequest) (*ShortUrlResponse, error)
 	ListShortUrl(context.Context, *ListShortUrlRequest) (*ListShortUrlResponse, error)
+	Liveness(context.Context, *emptypb.Empty) (*StatusReply, error)
+	Readiness(context.Context, *emptypb.Empty) (*StatusReply, error)
 	UpdateShortUrl(context.Context, *UpdateShortUrlRequest) (*ShortUrlResponse, error)
 }
 
@@ -33,6 +35,8 @@ func RegisterShortUrlHTTPServer(s *http.Server, srv ShortUrlHTTPServer) {
 	r.GET("/v1/shorturl", _ShortUrl_ListShortUrl0_HTTP_Handler(srv))
 	r.GET("/v1/shorturl/{alias}", _ShortUrl_GetShortUrl0_HTTP_Handler(srv))
 	r.DELETE("/v1/shorturl/{alias}", _ShortUrl_DeleteShortUrl0_HTTP_Handler(srv))
+	r.GET("/healthz", _ShortUrl_Liveness0_HTTP_Handler(srv))
+	r.GET("/readyz", _ShortUrl_Readiness0_HTTP_Handler(srv))
 }
 
 func _ShortUrl_CreateShortUrl0_HTTP_Handler(srv ShortUrlHTTPServer) func(ctx http.Context) error {
@@ -136,11 +140,51 @@ func _ShortUrl_DeleteShortUrl0_HTTP_Handler(srv ShortUrlHTTPServer) func(ctx htt
 	}
 }
 
+func _ShortUrl_Liveness0_HTTP_Handler(srv ShortUrlHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in emptypb.Empty
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, "/api.shorturl.v1.ShortUrl/Liveness")
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.Liveness(ctx, req.(*emptypb.Empty))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*StatusReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _ShortUrl_Readiness0_HTTP_Handler(srv ShortUrlHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in emptypb.Empty
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, "/api.shorturl.v1.ShortUrl/Readiness")
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.Readiness(ctx, req.(*emptypb.Empty))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*StatusReply)
+		return ctx.Result(200, reply)
+	}
+}
+
 type ShortUrlHTTPClient interface {
 	CreateShortUrl(ctx context.Context, req *CreateShortUrlRequest, opts ...http.CallOption) (rsp *ShortUrlResponse, err error)
 	DeleteShortUrl(ctx context.Context, req *DeleteShortUrlRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	GetShortUrl(ctx context.Context, req *GetShortUrlRequest, opts ...http.CallOption) (rsp *ShortUrlResponse, err error)
 	ListShortUrl(ctx context.Context, req *ListShortUrlRequest, opts ...http.CallOption) (rsp *ListShortUrlResponse, err error)
+	Liveness(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *StatusReply, err error)
+	Readiness(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *StatusReply, err error)
 	UpdateShortUrl(ctx context.Context, req *UpdateShortUrlRequest, opts ...http.CallOption) (rsp *ShortUrlResponse, err error)
 }
 
@@ -196,6 +240,32 @@ func (c *ShortUrlHTTPClientImpl) ListShortUrl(ctx context.Context, in *ListShort
 	pattern := "/v1/shorturl"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation("/api.shorturl.v1.ShortUrl/ListShortUrl"))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *ShortUrlHTTPClientImpl) Liveness(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*StatusReply, error) {
+	var out StatusReply
+	pattern := "/healthz"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation("/api.shorturl.v1.ShortUrl/Liveness"))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *ShortUrlHTTPClientImpl) Readiness(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*StatusReply, error) {
+	var out StatusReply
+	pattern := "/readyz"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation("/api.shorturl.v1.ShortUrl/Readiness"))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {

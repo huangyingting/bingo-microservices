@@ -11,6 +11,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -23,6 +24,8 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type BEClient interface {
 	Extract(ctx context.Context, in *ExtractRequest, opts ...grpc.CallOption) (*ExtractReply, error)
+	Liveness(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*StatusReply, error)
+	Readiness(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*StatusReply, error)
 }
 
 type bEClient struct {
@@ -42,11 +45,31 @@ func (c *bEClient) Extract(ctx context.Context, in *ExtractRequest, opts ...grpc
 	return out, nil
 }
 
+func (c *bEClient) Liveness(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*StatusReply, error) {
+	out := new(StatusReply)
+	err := c.cc.Invoke(ctx, "/api.be.v1.BE/Liveness", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *bEClient) Readiness(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*StatusReply, error) {
+	out := new(StatusReply)
+	err := c.cc.Invoke(ctx, "/api.be.v1.BE/Readiness", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // BEServer is the server API for BE service.
 // All implementations must embed UnimplementedBEServer
 // for forward compatibility
 type BEServer interface {
 	Extract(context.Context, *ExtractRequest) (*ExtractReply, error)
+	Liveness(context.Context, *emptypb.Empty) (*StatusReply, error)
+	Readiness(context.Context, *emptypb.Empty) (*StatusReply, error)
 	mustEmbedUnimplementedBEServer()
 }
 
@@ -56,6 +79,12 @@ type UnimplementedBEServer struct {
 
 func (UnimplementedBEServer) Extract(context.Context, *ExtractRequest) (*ExtractReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Extract not implemented")
+}
+func (UnimplementedBEServer) Liveness(context.Context, *emptypb.Empty) (*StatusReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Liveness not implemented")
+}
+func (UnimplementedBEServer) Readiness(context.Context, *emptypb.Empty) (*StatusReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Readiness not implemented")
 }
 func (UnimplementedBEServer) mustEmbedUnimplementedBEServer() {}
 
@@ -88,6 +117,42 @@ func _BE_Extract_Handler(srv interface{}, ctx context.Context, dec func(interfac
 	return interceptor(ctx, in, info, handler)
 }
 
+func _BE_Liveness_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BEServer).Liveness(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.be.v1.BE/Liveness",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BEServer).Liveness(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BE_Readiness_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BEServer).Readiness(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.be.v1.BE/Readiness",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BEServer).Readiness(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // BE_ServiceDesc is the grpc.ServiceDesc for BE service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -98,6 +163,14 @@ var BE_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Extract",
 			Handler:    _BE_Extract_Handler,
+		},
+		{
+			MethodName: "Liveness",
+			Handler:    _BE_Liveness_Handler,
+		},
+		{
+			MethodName: "Readiness",
+			Handler:    _BE_Readiness_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -8,6 +8,7 @@ import (
 	context "context"
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	binding "github.com/go-kratos/kratos/v2/transport/http/binding"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -19,11 +20,15 @@ const _ = http.SupportPackageIsVersion1
 
 type BIHTTPServer interface {
 	Clicks(context.Context, *ClicksRequest) (*ClicksReply, error)
+	Liveness(context.Context, *emptypb.Empty) (*StatusReply, error)
+	Readiness(context.Context, *emptypb.Empty) (*StatusReply, error)
 }
 
 func RegisterBIHTTPServer(s *http.Server, srv BIHTTPServer) {
 	r := s.Route("/")
 	r.GET("/v1/clicks/{alias}", _BI_Clicks0_HTTP_Handler(srv))
+	r.GET("/healthz", _BI_Liveness0_HTTP_Handler(srv))
+	r.GET("/readyz", _BI_Readiness0_HTTP_Handler(srv))
 }
 
 func _BI_Clicks0_HTTP_Handler(srv BIHTTPServer) func(ctx http.Context) error {
@@ -48,8 +53,48 @@ func _BI_Clicks0_HTTP_Handler(srv BIHTTPServer) func(ctx http.Context) error {
 	}
 }
 
+func _BI_Liveness0_HTTP_Handler(srv BIHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in emptypb.Empty
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, "/api.bi.v1.BI/Liveness")
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.Liveness(ctx, req.(*emptypb.Empty))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*StatusReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _BI_Readiness0_HTTP_Handler(srv BIHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in emptypb.Empty
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, "/api.bi.v1.BI/Readiness")
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.Readiness(ctx, req.(*emptypb.Empty))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*StatusReply)
+		return ctx.Result(200, reply)
+	}
+}
+
 type BIHTTPClient interface {
 	Clicks(ctx context.Context, req *ClicksRequest, opts ...http.CallOption) (rsp *ClicksReply, err error)
+	Liveness(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *StatusReply, err error)
+	Readiness(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *StatusReply, err error)
 }
 
 type BIHTTPClientImpl struct {
@@ -65,6 +110,32 @@ func (c *BIHTTPClientImpl) Clicks(ctx context.Context, in *ClicksRequest, opts .
 	pattern := "/v1/clicks/{alias}"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation("/api.bi.v1.BI/Clicks"))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *BIHTTPClientImpl) Liveness(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*StatusReply, error) {
+	var out StatusReply
+	pattern := "/healthz"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation("/api.bi.v1.BI/Liveness"))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *BIHTTPClientImpl) Readiness(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*StatusReply, error) {
+	var out StatusReply
+	pattern := "/readyz"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation("/api.bi.v1.BI/Readiness"))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
