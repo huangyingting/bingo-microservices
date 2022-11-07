@@ -9,30 +9,14 @@ jobs:
   purge-image:
     name: Prune images
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - container: be
-          - container: bi
-          - container: bg
-          - container: bs          
     steps:
       - name: Prune pull request image
         uses: vlaurin/action-ghcr-prune@main
         with:
           token: ${{ secrets.DELETE_PACKAGE_TOKEN }}
           organization: huangyingting
-          container: ${{ matrix.container }}
+          container: bs
           dry-run: true # Dry-run first, then change to `false`
           keep-last: 2
           untagged: false
           tag-regex: ^pr-
-      - name: Prune untagged image
-        uses: vlaurin/action-ghcr-prune@main
-        with:
-          token: ${{ secrets.DELETE_PACKAGE_TOKEN }}
-          organization: huangyingting
-          container: ${{ matrix.container }}
-          dry-run: true # Dry-run first, then change to `false`
-          untagged: true
