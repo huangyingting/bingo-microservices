@@ -15,6 +15,6 @@ jobs:
         with:
           token: ${{ secrets.DELETE_PACKAGE_TOKEN }}
           cut-off: An hour ago UTC
-          image-names: huangyingting/bs, huangyingting/be, huangyingting/bi, huangyingting/bg
+          image-names: bs, be, bi, bg
           account-type: personal
           filter-tags: pr-*
