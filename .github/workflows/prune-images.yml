@@ -15,7 +15,7 @@ jobs:
         with:
           token: ${{ secrets.DELETE_PACKAGE_TOKEN }}
           organization: huangyingting
-          container: bs
+          container: huangyingting/bs
           dry-run: true # Dry-run first, then change to `false`
           keep-last: 2
           untagged: false
