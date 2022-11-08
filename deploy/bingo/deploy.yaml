@@ -74,11 +74,11 @@ spec:
         - name: BI_JAEGER_ADDR
           value: http://jaeger-collector.jaeger.svc.cluster.local:14268/api/traces
         - name: BI_DB_DRIVER
-          value: mysql
+          value: postgres
         - name: BI_DB_HOST
-          value: mysql-primary.mysql.svc.cluster.local
+          value: postgres-postgresql-primary.postgres.svc.cluster.local
         - name: BI_DB_PORT
-          value: "3306"
+          value: "5432"
         - name: BI_DB_DATABASE
           value: bingo
         - name: BI_DB_USERNAME
@@ -142,11 +142,11 @@ spec:
         imagePullPolicy: Always
         env:
         - name: BS_DB_DRIVER
-          value: mysql
+          value: postgres
         - name: BS_DB_HOST
-          value: mysql-primary.mysql.svc.cluster.local
+          value: postgres-postgresql-primary.postgres.svc.cluster.local
         - name: BS_DB_PORT
-          value: "3306"
+          value: "5432"
         - name: BS_DB_DATABASE
           value: bingo
         - name: BS_DB_USERNAME
@@ -188,21 +188,45 @@ spec:
         - name: BS_JAEGER_ADDR
           value: http://jaeger-collector.jaeger.svc.cluster.local:14268/api/traces
         - name: BS_JWT_ISSUER
-          value: REPLACE_ME
+          valueFrom:
+            secretKeyRef:
+              name: bs-config
+              key: BS_JWT_ISSUER
         - name: BS_JWT_AUDIENCE
-          value: REPLACE_ME
+          valueFrom:
+            secretKeyRef:
+              name: bs-config
+              key: BS_JWT_AUDIENCE
         - name: BS_JWT_TID
-          value: REPLACE_ME
+          valueFrom:
+            secretKeyRef:
+              name: bs-config
+              key: BS_JWT_TID
         - name: BS_RECAPTCHA_SITE_KEY
-          value: REPLACE_ME
+          valueFrom:
+            secretKeyRef:
+              name: bs-config
+              key: BS_RECAPTCHA_SITE_KEY
         - name: BS_RECAPTCHA_SECRET_KEY
-          value: REPLACE_ME
+          valueFrom:
+            secretKeyRef:
+              name: bs-config
+              key: BS_RECAPTCHA_SECRET_KEY
         - name: BF_SCOPES_PREFIX
-          value: REPLACE_ME
+          valueFrom:
+            secretKeyRef:
+              name: bs-config
+              key: BF_SCOPES_PREFIX
         - name: BF_CLIENT_ID
-          value: REPLACE_ME
+          valueFrom:
+            secretKeyRef:
+              name: bs-config
+              key: BF_CLIENT_ID
         - name: BF_AUTHORITY
-          value: REPLACE_ME
+          valueFrom:
+            secretKeyRef:
+              name: bs-config
+              key: BF_AUTHORITY
         ports:
         - name: http
           containerPort: 8080
