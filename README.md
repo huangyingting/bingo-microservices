@@ -86,32 +86,26 @@ Bingo relies on [Google reCAPTCHA](https://www.google.com/recaptcha/about/) for 
 7. Visit URL http://localhost:8080 to login with your AAD/AAD B2C user account.
 
 ### Github CI/CD
-Bingo is integrated with Github Actions, three workflows are included
+Bingo is integrated with Github Actions, four workflows are included
 - Build & push docker images to github container registry
 - CodeQL to scan and discover vulnerabilities across go, javascript and python scripts
-- Clean untagged images
+- Prune untagged images
+- Prune pull request images
 For more details, check .github/workflows directory
 
 ### Kubernetes deployment
-Bingo supports kubernetes, a full set of deployment includes mysql, redis, rabbitmq and etcd (helm charts from bitnami), elasticsearch (operator from elasticsearch), nginx ingress controller, cert-manager as well prometheus (prometheus-community/prometheus).
+Bingo supports kubernetes, a full set of deployment includes postgresql, redis, rabbitmq and etcd (helm charts from bitnami), elasticsearch (operator from elasticsearch), nginx ingress controller, cert-manager as well prometheus (prometheus-community/prometheus).
 
-Deployment scripts files are included in deploy/ folder, deployment/bingo folder has bingo related yaml files, deploy.yaml needs to be customized to include below data
+Deployment scripts files are included in deploy/ folder, deployment/bingo folder has bingo related yaml files, there is a .env file needs to be customized to include below configurations
 
 ```
-    - name: BS_JWT_ISSUER
-        value: REPLACE_ME
-    - name: BS_JWT_AUDIENCE
-        value: REPLACE_ME
-    - name: BS_JWT_TID
-        value: REPLACE_ME
-    - name: BS_RECAPTCHA_SITE_KEY
-        value: REPLACE_ME
-    - name: BS_RECAPTCHA_SECRET_KEY
-        value: REPLACE_ME
-    - name: BF_SCOPES_PREFIX
-        value: REPLACE_ME
-    - name: BF_CLIENT_ID
-        value: REPLACE_ME
-    - name: BF_AUTHORITY
-        value: REPLACE_ME
+BS_RECAPTCHA_SITE_KEY=GOOGLE_RECAPTCHA_SITE_KEY
+BS_RECAPTCHA_SECRET_KEY=GOOGLE_RECAPTCHA_SECRET_KEY
+BS_JWT_ISSUER=https://sts.windows.net/AAD_TENANT_ID/
+BS_JWT_AUDIENCE=APPLICATION_ID_URI
+BS_JWT_TID=AAD_TENANT_ID
+BF_SCOPES_PREFIX=APPLICATION_ID_URI/
+BF_CLIENT_ID=SPA_APPLICATION_CLIENT_ID
+BF_AUTHORITY=https://login.microsoftonline.com/AAD_TENANT_ID
 ```
+Next, run `bash deploy.sh` to deploy all bingo microservices.
