@@ -19,7 +19,7 @@ require (
 	github.com/mattn/go-sqlite3 v1.14.16
 	github.com/miekg/dns v1.1.50
 	github.com/olivere/elastic/v7 v7.0.32
-	github.com/prometheus/client_golang v1.13.1
+	github.com/prometheus/client_golang v1.14.0
 	github.com/rabbitmq/amqp091-go v1.5.0
 	github.com/shirou/gopsutil/v3 v3.22.10
 	github.com/xenitab/go-oidc-middleware v0.0.32
