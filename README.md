@@ -69,15 +69,19 @@ Bingo relies on [Google reCAPTCHA](https://www.google.com/recaptcha/about/) for 
     ```
     BF_SCOPES_PREFIX=APPLICATION_ID_URI/
     BF_CLIENT_ID=SPA_APPLICATION_CLIENT_ID
-    BF_AUTHORITY=https://login.microsoftonline.com/TENANT_ID
+    BF_AUTHORITY=https://login.microsoftonline.com/AAD_TENANT_ID
     ```
 5. Create a file named .env.local under go/app/bs directory with below data
     ```
     BS_RECAPTCHA_SITE_KEY=GOOGLE_RECAPTCHA_SITE_KEY
     BS_RECAPTCHA_SECRET_KEY=GOOGLE_RECAPTCHA_SECRET_KEY
-    BS_JWT_ISSUER=https://sts.windows.net/TENANT_ID/
+    # AAD v1 https://sts.windows.net/AAD_TENANT_ID/
+    # AAD v2 https://login.microsoftonline.com/AAD_TENANT_ID/v2.0
+    BS_JWT_ISSUER=https://sts.windows.net/AAD_TENANT_ID/
+    # AAD v1 api://APPLICATION_ID_URI
+    # AAD v2 APPLICATION_ID_URI
     BS_JWT_AUDIENCE=APPLICATION_ID_URI
-    BS_JWT_TID=TENANT_ID
+    BS_JWT_TID=AAD_TENANT_ID
     ```
 6. Start all services 
     ```
@@ -101,7 +105,11 @@ Deployment scripts files are included in deploy/ folder, deployment/bingo folder
 ```
 BS_RECAPTCHA_SITE_KEY=GOOGLE_RECAPTCHA_SITE_KEY
 BS_RECAPTCHA_SECRET_KEY=GOOGLE_RECAPTCHA_SECRET_KEY
+# AAD v1 https://sts.windows.net/AAD_TENANT_ID/
+# AAD v2 https://login.microsoftonline.com/AAD_TENANT_ID/v2.0
 BS_JWT_ISSUER=https://sts.windows.net/AAD_TENANT_ID/
+# AAD v1 api://APPLICATION_ID_URI
+# AAD v2 APPLICATION_ID_URI
 BS_JWT_AUDIENCE=APPLICATION_ID_URI
 BS_JWT_TID=AAD_TENANT_ID
 BF_SCOPES_PREFIX=APPLICATION_ID_URI/
