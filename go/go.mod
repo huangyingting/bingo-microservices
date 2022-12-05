@@ -12,7 +12,7 @@ require (
 	github.com/go-kratos/kratos/contrib/metrics/prometheus/v2 v2.0.0-20221102101533-2a65502be27b
 	github.com/go-kratos/kratos/v2 v2.5.3
 	github.com/go-redis/redis/v8 v8.11.5
-	github.com/go-sql-driver/mysql v1.6.0
+	github.com/go-sql-driver/mysql v1.7.0
 	github.com/gorilla/websocket v1.5.0
 	github.com/jxskiss/base62 v1.1.0
 	github.com/lib/pq v1.10.7
