@@ -24,17 +24,17 @@
     jsonpointer "^5.0.0"
     leven "^3.1.0"
 
-"@azure/msal-browser@^2.30.0":
-  version "2.30.0"
-  resolved "https://registry.yarnpkg.com/@azure/msal-browser/-/msal-browser-2.30.0.tgz#9d6545df9604554cd0eb8d6f0292d732ec564d2e"
-  integrity sha512-4Y9+rjJiTFP7KEmuq1btmIrBgk0ImNyKsXj6A6NHZALd1X0M6W7L7kxpH6F+d1tEkMv8bYnZdn7IcauXbL8Llw==
+"@azure/msal-browser@^2.32.0":
+  version "2.32.0"
+  resolved "https://registry.yarnpkg.com/@azure/msal-browser/-/msal-browser-2.32.0.tgz#9ad3c3ab8e191cdc21175ab5a755845230bac959"
+  integrity sha512-uDP0vNmIefM6+RjILGKu+zOiN+VGnEvxRfUIV5hOWOWLLkG7kcDPYG/v/EJMoG+R5DYW9jXA5nvZT76t5HdEAQ==
   dependencies:
-    "@azure/msal-common" "^7.6.0"
+    "@azure/msal-common" "^9.0.0"
 
-"@azure/msal-common@^7.6.0":
-  version "7.6.0"
-  resolved "https://registry.yarnpkg.com/@azure/msal-common/-/msal-common-7.6.0.tgz#b52e97ef540275f72611cff57937dfa0b34cdcca"
-  integrity sha512-XqfbglUTVLdkHQ8F9UQJtKseRr3sSnr9ysboxtoswvaMVaEfvyLtMoHv9XdKUfOc0qKGzNgRFd9yRjIWVepl6Q==
+"@azure/msal-common@^9.0.0":
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/@azure/msal-common/-/msal-common-9.0.0.tgz#4cea6ae2dcbac9af7251532e26969c91826ad578"
+  integrity sha512-uiFiFKVNTsRpmKio5bcObTuHcaHHZB2GEsjJJN8rbJNmzoYuZzNioOoK+J0QK0jEasRBgAoR5A8hSty2iKRzIg==
 
 "@azure/msal-react@1.4.9":
   version "1.4.9"
@@ -7626,10 +7626,10 @@ react-error-overlay@^6.0.11:
   resolved "https://registry.npmjs.org/react-error-overlay/-/react-error-overlay-6.0.11.tgz"
   integrity sha512-/6UZ2qgEyH2aqzYZgQPxEnz33NJ2gNsnHA2o5+o4wW9bLM/JYQitNP9xPhsXwC08hMMovfGe/8retsdDsczPRg==
 
-react-hook-form@7.39.1:
-  version "7.39.1"
-  resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.39.1.tgz#ded87d4b3f6692d1f9219515f78ca282b6e1ebf7"
-  integrity sha512-MiF9PCILN5KulhSGbnjohMiTOrB47GerDTichMNP0y2cPUu1GTRFqbunOxCE9N1499YTLMV/ne4gFzqCp1rxrQ==
+react-hook-form@7.39.7:
+  version "7.39.7"
+  resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.39.7.tgz#8eabf2dbb9fce5baccfa60f401f6ef99c4e17fb4"
+  integrity sha512-RT0NE1uW1bY3nAuMdzfqHrpv2+sICVFaxBOvNJsCva4if2sxPxcyJy/CSqU56UXqAdRg724CNDhjMYPSHSF3rg==
 
 react-icons@4.6.0:
   version "4.6.0"
