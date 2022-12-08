@@ -40,6 +40,7 @@ import (
 	"github.com/go-kratos/kratos/v2/middleware/tracing"
 	transhttp "github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/xenitab/go-oidc-middleware/oidcgin"
+	"github.com/xenitab/go-oidc-middleware/options"
 	opts "github.com/xenitab/go-oidc-middleware/options"
 	"go.opentelemetry.io/contrib/instrumentation/github.com/gin-gonic/gin/otelgin"
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
@@ -82,6 +83,37 @@ func init() {
 	)
 }
 
+type AzureADClaims struct {
+	Aio               string    `json:"aio"`
+	Audience          []string  `json:"aud"`
+	Azp               string    `json:"azp"`
+	Azpacr            string    `json:"azpacr"`
+	ExpiresAt         time.Time `json:"exp"`
+	IssuedAt          time.Time `json:"iat"`
+	Idp               string    `json:"idp"`
+	Issuer            string    `json:"iss"`
+	Name              string    `json:"name"`
+	NotBefore         time.Time `json:"nbf"`
+	Oid               string    `json:"oid"`
+	PreferredUsername string    `json:"preferred_username"`
+	Rh                string    `json:"rh"`
+	Scope             string    `json:"scp"`
+	Subject           string    `json:"sub"`
+	TenantId          string    `json:"tid"`
+	Uti               string    `json:"uti"`
+	TokenVersion      string    `json:"ver"`
+}
+
+func GetAzureADClaimsValidationFn(requiredTenantId string) options.ClaimsValidationFn[AzureADClaims] {
+	return func(claims *AzureADClaims) error {
+		if requiredTenantId != "" && claims.TenantId != requiredTenantId {
+			return fmt.Errorf("tid claim is required to be %q but was: %s", requiredTenantId, claims.TenantId)
+		}
+
+		return nil
+	}
+}
+
 func openIDHandler(c *conf.JWT) gin.HandlerFunc {
 	var opts []opts.Option = []opts.Option{
 		opts.WithIssuer(c.Issuer),
@@ -90,7 +122,7 @@ func openIDHandler(c *conf.JWT) gin.HandlerFunc {
 		opts.WithFallbackSignatureAlgorithm(c.FallbackSignatureAlgorithm),
 	}
 
-	return oidcgin.New(opts...)
+	return oidcgin.New(GetAzureADClaimsValidationFn(c.RequiredClaims["tid"]), opts...)
 }
 
 func getOID(c *gin.Context) string {
