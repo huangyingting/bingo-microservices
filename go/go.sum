@@ -431,8 +431,8 @@ github.com/xdg-go/stringprep v1.0.3/go.mod h1:W3f5j4i+9rC0kuIEJL0ky1VpHXQU3ocBgk
 github.com/xenitab/dispans v0.0.10 h1:S+gSUM14rDJWK7MYNrjb8JbjeQPip6mlNJyLX+g7Agc=
 github.com/xenitab/go-oidc-middleware v0.0.39 h1:NP6sspn1hMFIwndqn+VNOgqfRfiDPNQaZrXGyclVsYc=
 github.com/xenitab/go-oidc-middleware v0.0.39/go.mod h1:ir5fF6tpCQSHauFEfLaHbmND9pHEEaXHQqpjiOK+PY0=
-github.com/xenitab/go-oidc-middleware/oidcgin v0.0.37 h1:ZhQzkjqdW8XByhbJYVH2hOeTq4L5uRNOJm4Dtgo2RcY=
-github.com/xenitab/go-oidc-middleware/oidcgin v0.0.37/go.mod h1:5EAdNorR4kIQPSvhJ5OS8feELfD7o5kNiR7zDB8FfIo=
+github.com/xenitab/go-oidc-middleware/oidcgin v0.0.39 h1:U9fLcde/aXtksZli+/fOP+AxBNhiANlMjeLzoBatZd0=
+github.com/xenitab/go-oidc-middleware/oidcgin v0.0.39/go.mod h1:Izpmn0bSQnv5Ii42Aknb5MvjQX2Y+PxYwNhjrDKE/7M=
 github.com/youmark/pkcs8 v0.0.0-20181117223130-1be2e3e5546d/go.mod h1:rHwXgn7JulP+udvsHwJoVG1YGAP6VLg4y9I5dyZdqmA=
 github.com/youmark/pkcs8 v0.0.0-20201027041543-1326539a0a0a h1:fZHgsYlfvtyqToslyjUt3VOPF4J7aK/3MPcK7xp3PDk=
 github.com/youmark/pkcs8 v0.0.0-20201027041543-1326539a0a0a/go.mod h1:ul22v+Nro/R083muKhosV54bj5niojjWZvU8xrevuH4=
