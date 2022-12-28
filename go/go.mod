@@ -22,7 +22,7 @@ require (
 	github.com/prometheus/client_golang v1.14.0
 	github.com/rabbitmq/amqp091-go v1.5.0
 	github.com/shirou/gopsutil/v3 v3.22.11
-	github.com/xenitab/go-oidc-middleware v0.0.37
+	github.com/xenitab/go-oidc-middleware v0.0.39
 	github.com/xenitab/go-oidc-middleware/oidcgin v0.0.37
 	go.etcd.io/etcd/client/v3 v3.5.6
 	go.mongodb.org/mongo-driver v1.11.0

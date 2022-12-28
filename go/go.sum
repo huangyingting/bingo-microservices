@@ -429,8 +429,8 @@ github.com/xdg-go/scram v1.1.1/go.mod h1:RaEWvsqvNKKvBPvcKeFjrG2cJqOkHTiyTpzz23n
 github.com/xdg-go/stringprep v1.0.3 h1:kdwGpVNwPFtjs98xCGkHjQtGKh86rDcRZN17QEMCOIs=
 github.com/xdg-go/stringprep v1.0.3/go.mod h1:W3f5j4i+9rC0kuIEJL0ky1VpHXQU3ocBgklLGvcBnW8=
 github.com/xenitab/dispans v0.0.10 h1:S+gSUM14rDJWK7MYNrjb8JbjeQPip6mlNJyLX+g7Agc=
-github.com/xenitab/go-oidc-middleware v0.0.37 h1:cmcFBPRBm63JLe67Xfen3Mi5rGkHyxJGGJqbIRbJNts=
-github.com/xenitab/go-oidc-middleware v0.0.37/go.mod h1:ir5fF6tpCQSHauFEfLaHbmND9pHEEaXHQqpjiOK+PY0=
+github.com/xenitab/go-oidc-middleware v0.0.39 h1:NP6sspn1hMFIwndqn+VNOgqfRfiDPNQaZrXGyclVsYc=
+github.com/xenitab/go-oidc-middleware v0.0.39/go.mod h1:ir5fF6tpCQSHauFEfLaHbmND9pHEEaXHQqpjiOK+PY0=
 github.com/xenitab/go-oidc-middleware/oidcgin v0.0.37 h1:ZhQzkjqdW8XByhbJYVH2hOeTq4L5uRNOJm4Dtgo2RcY=
 github.com/xenitab/go-oidc-middleware/oidcgin v0.0.37/go.mod h1:5EAdNorR4kIQPSvhJ5OS8feELfD7o5kNiR7zDB8FfIo=
 github.com/youmark/pkcs8 v0.0.0-20181117223130-1be2e3e5546d/go.mod h1:rHwXgn7JulP+udvsHwJoVG1YGAP6VLg4y9I5dyZdqmA=
