@@ -8,7 +8,7 @@ require (
 	github.com/gin-contrib/cors v1.4.0
 	github.com/gin-contrib/multitemplate v0.0.0-20220829131020-8c2a8441bc2b
 	github.com/gin-contrib/static v0.0.1
-	github.com/gin-gonic/gin v1.8.1
+	github.com/gin-gonic/gin v1.8.2
 	github.com/go-kratos/kratos/contrib/metrics/prometheus/v2 v2.0.0-20221102101533-2a65502be27b
 	github.com/go-kratos/kratos/v2 v2.5.3
 	github.com/go-redis/redis/v8 v8.11.5
@@ -26,9 +26,9 @@ require (
 	github.com/xenitab/go-oidc-middleware/oidcgin v0.0.39
 	go.etcd.io/etcd/client/v3 v3.5.6
 	go.mongodb.org/mongo-driver v1.11.0
-	go.opentelemetry.io/contrib/instrumentation/github.com/gin-gonic/gin/otelgin v0.36.4
+	go.opentelemetry.io/contrib/instrumentation/github.com/gin-gonic/gin/otelgin v0.39.0
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.37.0
-	go.opentelemetry.io/otel v1.11.2
+	go.opentelemetry.io/otel v1.13.0
 	go.opentelemetry.io/otel/exporters/jaeger v1.11.2
 	go.opentelemetry.io/otel/sdk v1.11.2
 	google.golang.org/genproto v0.0.0-20221027153422-115e99e71e1c
@@ -97,17 +97,17 @@ require (
 	go.etcd.io/etcd/api/v3 v3.5.6 // indirect
 	go.etcd.io/etcd/client/pkg/v3 v3.5.6 // indirect
 	go.opentelemetry.io/otel/metric v0.34.0 // indirect
-	go.opentelemetry.io/otel/trace v1.11.2 // indirect
+	go.opentelemetry.io/otel/trace v1.13.0 // indirect
 	go.uber.org/atomic v1.10.0 // indirect
 	go.uber.org/multierr v1.8.0 // indirect
 	go.uber.org/ratelimit v0.2.0 // indirect
 	go.uber.org/zap v1.23.0 // indirect
 	golang.org/x/crypto v0.3.0 // indirect
 	golang.org/x/mod v0.6.0 // indirect
-	golang.org/x/net v0.2.0 // indirect
+	golang.org/x/net v0.5.0 // indirect
 	golang.org/x/sync v0.1.0 // indirect
-	golang.org/x/sys v0.2.0 // indirect
-	golang.org/x/text v0.4.0 // indirect
+	golang.org/x/sys v0.4.0 // indirect
+	golang.org/x/text v0.6.0 // indirect
 	golang.org/x/tools v0.2.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
