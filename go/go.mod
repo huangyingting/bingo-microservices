@@ -21,7 +21,7 @@ require (
 	github.com/olivere/elastic/v7 v7.0.32
 	github.com/prometheus/client_golang v1.14.0
 	github.com/rabbitmq/amqp091-go v1.5.0
-	github.com/shirou/gopsutil/v3 v3.22.11
+	github.com/shirou/gopsutil/v3 v3.23.2
 	github.com/xenitab/go-oidc-middleware v0.0.39
 	github.com/xenitab/go-oidc-middleware/oidcgin v0.0.39
 	go.etcd.io/etcd/client/v3 v3.5.6
@@ -106,7 +106,7 @@ require (
 	golang.org/x/mod v0.6.0 // indirect
 	golang.org/x/net v0.2.0 // indirect
 	golang.org/x/sync v0.1.0 // indirect
-	golang.org/x/sys v0.2.0 // indirect
+	golang.org/x/sys v0.5.0 // indirect
 	golang.org/x/text v0.4.0 // indirect
 	golang.org/x/tools v0.2.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
