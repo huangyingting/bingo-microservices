@@ -25,6 +25,7 @@ require (
 	github.com/xenitab/go-oidc-middleware v0.0.39
 	github.com/xenitab/go-oidc-middleware/oidcgin v0.0.39
 	go.etcd.io/etcd/client/v3 v3.5.6
+	go.mongodb.org/mongo-driver v1.11.3
 	go.mongodb.org/mongo-driver v1.11.0
 	go.opentelemetry.io/contrib/instrumentation/github.com/gin-gonic/gin/otelgin v0.40.0
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.37.0
