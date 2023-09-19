@@ -1,5 +1,5 @@
 gunicorn==20.1.0
-flask==2.2.5
+flask==2.3.3
 newspaper3k==0.2.8
 opentelemetry-instrumentation-requests==0.41b0
 opentelemetry-instrumentation-flask==0.41b0
