@@ -1,5 +1,5 @@
 # build
-FROM golang:1.19.3-alpine3.16 as builder
+FROM golang:1.21-alpine as builder
 ARG VERSION
 COPY go/. /build
 WORKDIR /build/app/bg
@@ -7,7 +7,7 @@ RUN mkdir -p bin/ && \
 	GOOS=linux GOFLAGS=-buildvcs=false go build -ldflags "-s -w -X main.Version=$VERSION" -o ./bin/bg ./cmd/server && \
 	cp configs/config.yaml ./bin/config.yaml
 # create docker image
-FROM redis:6.2.7-alpine3.16
+FROM redis:alpine
 WORKDIR /app
 COPY go/app/bg/docker/start.sh .
 COPY go/app/bg/docker/dump.rdb .

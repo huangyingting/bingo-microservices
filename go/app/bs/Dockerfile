@@ -1,5 +1,5 @@
 # build react spa
-FROM node:16-alpine3.16 AS react-build
+FROM node:16-alpine AS react-build
 ARG VERSION
 WORKDIR /build
 COPY js/bf/package.json js/bf/yarn.lock .
@@ -8,7 +8,7 @@ COPY js/bf/ .
 RUN yarn build
 
 # build bs
-FROM golang:1.19.3-alpine3.16 as go-build
+FROM golang:1.21-alpine as go-build
 COPY go/. /build
 WORKDIR /build/app/bs
 RUN mkdir -p bin/ && \
