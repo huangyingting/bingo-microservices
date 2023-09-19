@@ -1,4 +1,4 @@
-FROM golang:1.19.3-alpine3.16 as builder
+FROM golang:1.21-alpine as builder
 ARG VERSION
 COPY go/. /build
 WORKDIR /build/app/bi
@@ -7,7 +7,7 @@ RUN mkdir -p bin/ && \
 	CGO_ENABLED=1 GOOS=linux GOFLAGS=-buildvcs=false go build -ldflags "-s -w -X main.Version=$VERSION" -o ./bin/bi ./cmd/server && \
 	cp configs/config.yaml ./bin/config.yaml
 
-FROM alpine:3.16
+FROM alpine
 WORKDIR /app
 COPY --from=builder /build/app/bi/bin . 
 EXPOSE 8001

@@ -6,8 +6,7 @@ import (
 	"errors"
 	"time"
 
-	"go.mongodb.org/mongo-driver/bson/bsontype"
-	"go.mongodb.org/mongo-driver/x/bsonx"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 var ErrNoRowsUpdated = errors.New("no rows updated")
@@ -66,14 +65,14 @@ func (ss StringSlice) Value() (driver.Value, error) {
 }
 
 // create an empty array to mongodb in case StringSlice is nil
-func (ss StringSlice) MarshalBSONValue() (bsontype.Type, []byte, error) {
-	bsonArr := bsonx.Arr{}
+func (ss StringSlice) MarshalBSONValue() ([]byte, error) {
+	bsonArr := bson.A{}
 	if ss != nil {
 		for _, s := range ss {
-			bsonArr = append(bsonArr, bsonx.String(s))
+			bsonArr = append(bsonArr, s)
 		}
 	}
-	return bsonArr.MarshalBSONValue()
+	return bson.Marshal(bsonArr)
 }
 
 // ShortUrl
