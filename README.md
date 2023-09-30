@@ -53,25 +53,30 @@ References
 Bingo relies on [Google reCAPTCHA](https://www.google.com/recaptcha/about/) for bot protection, please create a reCAPTCHA from reCAPTCHA admin portal, and record SITE KEY as well as SECRET KEY.
 
 ### Build and run locally
-1. Clone the repo, 
+1. Install tools
+   ```
+   sudo apt install -y protobuf-compiler
+   go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+   ```
+3. Clone the repo, 
     ```
     git clone https://github.com/huangyingting/bingo-microservices
     ```
-2. Switch directory to repo, 
+4. Switch directory to repo, 
     ```
     cd bingo-microservices
     ```
-3. Build container images for each service
+5. Build container images for each service
     ```
     make docker
     ```
-4. Create a file named .env.local under js/bf directory with below data
+6. Create a file named .env.local under js/bf directory with below data
     ```
     BF_SCOPES_PREFIX=APPLICATION_ID_URI/
     BF_CLIENT_ID=SPA_APPLICATION_CLIENT_ID
     BF_AUTHORITY=https://login.microsoftonline.com/AAD_TENANT_ID
     ```
-5. Create a file named .env.local under go/app/bs directory with below data
+7. Create a file named .env.local under go/app/bs directory with below data
     ```
     BS_RECAPTCHA_SITE_KEY=GOOGLE_RECAPTCHA_SITE_KEY
     BS_RECAPTCHA_SECRET_KEY=GOOGLE_RECAPTCHA_SECRET_KEY
@@ -83,11 +88,11 @@ Bingo relies on [Google reCAPTCHA](https://www.google.com/recaptcha/about/) for 
     BS_JWT_AUDIENCE=APPLICATION_ID_URI
     BS_JWT_TID=AAD_TENANT_ID
     ```
-6. Start all services 
+8. Start all services 
     ```
     make up
     ```
-7. Visit URL http://localhost:8080 to login with your AAD/AAD B2C user account.
+9. Visit URL http://localhost:8080 to login with your AAD/AAD B2C user account.
 
 ### Github CI/CD
 Bingo is integrated with Github Actions, four workflows are included
