@@ -22,7 +22,7 @@ WORKDIR /app
 COPY --from=react-build /build/build website
 COPY --from=go-build /build/app/bs/bin .
 COPY js/bf/env-config.sh .
-COPY js/bf/.env .
+COPY js/bf/.env.template .env
 
 RUN apk --no-cache add bash sed
 
