@@ -95,8 +95,8 @@ services:
   bs:
     image: huangyingting/bs
     env_file:
-      - js/bf/.env.local
-      - go/app/bs/.env.local
+      - js/bf/.env
+      - go/app/bs/.env
     build: 
       context: .
       dockerfile: go/app/bs/Dockerfile

@@ -21,7 +21,7 @@
 go.work
 
 # environment local file
-.env.local
+.env
 
 # bin directories
 bin/

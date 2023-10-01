@@ -75,13 +75,11 @@ paths:
                 - name: start
                   in: query
                   schema:
-                    type: integer
-                    format: int64
+                    type: string
                 - name: count
                   in: query
                   schema:
-                    type: integer
-                    format: int64
+                    type: string
             responses:
                 "200":
                     description: OK
@@ -299,14 +297,12 @@ components:
             type: object
             properties:
                 clicks:
-                    type: integer
-                    format: uint64
+                    type: string
         CpuLoadRequest:
             type: object
             properties:
                 percent:
-                    type: integer
-                    format: int64
+                    type: string
         CreateShortUrlRequest:
             type: object
             properties:
@@ -330,17 +326,14 @@ components:
                     items:
                         $ref: '#/components/schemas/ShortUrlResponse'
                 start:
-                    type: integer
-                    format: int64
+                    type: string
                 count:
-                    type: integer
-                    format: int64
+                    type: string
         MemLoadRequest:
             type: object
             properties:
                 size:
-                    type: integer
-                    format: int64
+                    type: string
         ShortUrlResponse:
             type: object
             properties:
@@ -400,8 +393,7 @@ components:
                 goVersion:
                     type: string
                 memTotal:
-                    type: integer
-                    format: uint64
+                    type: string
                 localIp:
                     type: string
                 externalIp:

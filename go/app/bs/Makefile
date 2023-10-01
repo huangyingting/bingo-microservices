@@ -1,6 +1,6 @@
 API_POST_PROCESS=cd ../../api/$(APP_NAME) && ls v1/*.pb.go | xargs -n1 -IX bash -c 'sed s/,omitempty// X > X.tmp && mv X{.tmp,}'
 include ../../Makefile.inc
-include .env.local
+include .env
 
 ifeq ($(DB),sqlite)
     DB_DOCKER_CMD = 
@@ -24,7 +24,7 @@ ifeq ($(DB),mongo)
 		DB_ENV = -e BI_DB_DRIVER=mongo -e BI_DB_HOST=host.docker.internal -e BI_DB_PORT=27017 -e BI_DB_DATABASE=bingo -e BI_DB_USERNAME=bingo -e BI_DB_PASSWORD=microservices
 endif
 
-$(eval export $(shell sed -ne 's/ *#.*$$//; /./ s/=.*$$// p' .env.local))
+$(eval export $(shell sed -ne 's/ *#.*$$//; /./ s/=.*$$// p' .env))
 
 .PHONY: up
 up:

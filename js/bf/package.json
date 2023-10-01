@@ -33,7 +33,7 @@
     "@svgr/webpack": "^6.2.1"
   },
   "scripts": {
-    "start": "chmod +x ./env-config.sh && ./env-config.sh ./.env.local && mv env-config.js ./public/ && REACT_APP_ENV=dev react-scripts start",
+    "start": "chmod +x ./env-config.sh && ./env-config.sh ./.env && mv env-config.js ./public/ && REACT_APP_ENV=dev react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

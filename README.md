@@ -56,11 +56,6 @@ Bingo relies on [Google reCAPTCHA](https://www.google.com/recaptcha/about/) for 
 1. Install tools
    ```
    sudo apt install -y protobuf-compiler
-   go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
-   go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
-   go install github.com/go-kratos/kratos/cmd/protoc-gen-go-http/v2@latest
-   go install github.com/go-kratos/kratos/cmd/protoc-gen-go-errors/v2@latest
-   go install github.com/google/gnostic/cmd/protoc-gen-openapi@latest
    ```
 3. Clone the repo, 
     ```
@@ -74,13 +69,13 @@ Bingo relies on [Google reCAPTCHA](https://www.google.com/recaptcha/about/) for 
     ```
     make docker
     ```
-6. Create a file named .env.local under js/bf directory with below data
+6. Create a file named .env under js/bf directory with below data
     ```
     BF_SCOPES_PREFIX=APPLICATION_ID_URI/
     BF_CLIENT_ID=SPA_APPLICATION_CLIENT_ID
     BF_AUTHORITY=https://login.microsoftonline.com/AAD_TENANT_ID
     ```
-7. Create a file named .env.local under go/app/bs directory with below data
+7. Create a file named .env under go/app/bs directory with below data
     ```
     BS_RECAPTCHA_SITE_KEY=GOOGLE_RECAPTCHA_SITE_KEY
     BS_RECAPTCHA_SECRET_KEY=GOOGLE_RECAPTCHA_SECRET_KEY

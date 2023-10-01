@@ -4,19 +4,9 @@ INTERNAL_PROTO_FILES=$(shell find internal -name *.proto)
 API_PROTO_FILES=$(shell cd ../../api/$(APP_NAME) && find . -name *.proto)
 DOCKER_IMAGE=huangyingting/$(APP_NAME):latest
 
-.PHONY: init
-# init env
-init:
-	go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
-	go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
-	go install github.com/go-kratos/kratos/cmd/protoc-gen-go-http/v2@latest
-	go install github.com/google/gnostic/cmd/protoc-gen-openapi@latest
-	go install github.com/go-kratos/kratos/cmd/protoc-gen-go-errors/v2@latest
-
-
 .PHONY: api
 # generate api code
-api:
+api: 
 	 cd ../../api/$(APP_NAME) && protoc --proto_path=. \
            --proto_path=../../third_party \
            --go_out=paths=source_relative:. \
