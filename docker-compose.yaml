@@ -74,7 +74,7 @@ services:
       - BI_DB_PORT=3306
       - BI_DB_DATABASE=bingo
       - BI_DB_USERNAME=bingo
-      - BI_DB_PASSWORD=P@ssw0rd
+      - BI_DB_PASSWORD=microservices
       - BI_AMQP_URI=amqp://rabbitmq:5672/
       - BI_REMOTE_BG_HTTP_ADDR=bg:8000
       - BI_JAEGER_ADDR=http://jaeger:14268/api/traces
@@ -101,7 +101,7 @@ services:
       context: .
       dockerfile: go/app/bs/Dockerfile
     ports:
-      - 8080:8080
+      - 18080:8080
     environment:
       - BS_DB_DRIVER=mysql
       - BS_DB_HOST=mysql
