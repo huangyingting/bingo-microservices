@@ -87,6 +87,7 @@ func (es *ElasticSearch) Index(alias Alias) error {
 	return err
 }
 
+// The terms query is the same as the term query, except you can search for multiple values. A document will match if it contains at least one of the terms.
 func (es *ElasticSearch) SearchOr(oid string, tags []string) ([]Alias, error) {
 	es.h.Debugf("search or oid: %s tags: %v", oid, tags)
 	var queries []types.Query
