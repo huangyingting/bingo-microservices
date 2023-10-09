@@ -21,7 +21,7 @@ require (
 	github.com/mattn/go-sqlite3 v1.14.17
 	github.com/miekg/dns v1.1.56
 	github.com/prometheus/client_golang v1.17.0
-	github.com/rabbitmq/amqp091-go v1.8.1
+	github.com/rabbitmq/amqp091-go v1.9.0
 	github.com/shirou/gopsutil/v3 v3.23.9
 	github.com/xenitab/go-oidc-middleware v0.0.43
 	github.com/xenitab/go-oidc-middleware/oidcgin v0.0.43
