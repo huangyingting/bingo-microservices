@@ -1,7 +1,7 @@
 gunicorn==21.2.0
 flask==3.0.0
 newspaper3k==0.2.8
-opentelemetry-instrumentation-requests==0.41b0
+opentelemetry-instrumentation-requests==0.42b0
 opentelemetry-instrumentation-flask==0.41b0
 nltk==3.8.1
 opentelemetry-exporter-jaeger==1.20.0
