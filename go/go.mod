@@ -5,7 +5,7 @@ go 1.21.0
 require (
 	github.com/Depado/ginprom v1.7.11
 	github.com/denisenkom/go-mssqldb v0.12.3
-	github.com/elastic/go-elasticsearch/v8 v8.10.0
+	github.com/elastic/go-elasticsearch/v8 v8.11.0
 	github.com/gin-contrib/cors v1.4.0
 	github.com/gin-contrib/multitemplate v0.0.0-20230212012517-45920c92c271
 	github.com/gin-contrib/static v0.0.1
@@ -47,7 +47,7 @@ require (
 	github.com/coreos/go-systemd/v22 v22.3.2 // indirect
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.2.0 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
-	github.com/elastic/elastic-transport-go/v8 v8.0.0-20230329154755-1a3c63de0db6 // indirect
+	github.com/elastic/elastic-transport-go/v8 v8.3.0 // indirect
 	github.com/felixge/httpsnoop v1.0.3 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.2 // indirect
